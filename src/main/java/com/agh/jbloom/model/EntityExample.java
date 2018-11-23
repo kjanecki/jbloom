@@ -6,14 +6,13 @@ import com.agh.jbloom.annotations.Id;
 import java.util.Objects;
 
 @Entity
-public class EntityExample {
+public class EntityExample implements SqlParamAdapter{
 
     @Id
     private int id;
     private int value;
     private String name;
     private String description;
-    private String test;
 
     public EntityExample() {
     }
@@ -74,5 +73,13 @@ public class EntityExample {
     @Override
     public int hashCode() {
         return Objects.hash(getId(), getValue(), getName(), getDescription());
+    }
+
+    @Override
+    public String toParamList() {
+        return "(" + id + ", " +
+                value + ", '" +
+                name + "', '" +
+                description + "')";
     }
 }
