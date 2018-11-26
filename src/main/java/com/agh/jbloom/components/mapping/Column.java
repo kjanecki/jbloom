@@ -1,4 +1,4 @@
-package com.agh.jbloom.components;
+package com.agh.jbloom.components.mapping;
 
 public class Column {
 

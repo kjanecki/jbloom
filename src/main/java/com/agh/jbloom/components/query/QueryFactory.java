@@ -1,4 +1,6 @@
-package com.agh.jbloom.components;
+package com.agh.jbloom.components.query;
+
+import com.agh.jbloom.components.mapping.Table;
 
 public class QueryFactory {
 

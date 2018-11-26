@@ -1,4 +1,6 @@
-package com.agh.jbloom.components;
+package com.agh.jbloom.components.mapping;
+
+import com.agh.jbloom.components.mapping.Column;
 
 import java.util.Map;
 
