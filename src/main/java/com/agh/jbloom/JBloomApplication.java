@@ -13,7 +13,6 @@ public class JBloomApplication {
 
     public static void main(String[] args) throws SQLException{
 
-
         ApplicationContext ctx = new AnnotationConfigApplicationContext(AppConfig.class);
         MappingService mappingService = ctx.getBean(MappingService.class);
         mappingService.registerEntity(EntityExample.class);
