@@ -6,25 +6,21 @@ import com.agh.jbloom.model.EntityExample;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-
-import java.lang.reflect.InvocationTargetException;
-import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 @SpringBootApplication
 public class JBloomApplication {
 
-    public static void main(String[] args) throws SQLException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+    public static void main(String[] args) throws SQLException{
 
 
         ApplicationContext ctx = new AnnotationConfigApplicationContext(AppConfig.class);
-
-        Class.forName("com.mysql.cj.jdbc.Driver").getConstructor().newInstance();
-
-        MappingService mappingService = (MappingService) ctx.getBean("mappingService");
-
+        MappingService mappingService = ctx.getBean(MappingService.class);
         mappingService.registerEntity(EntityExample.class);
-
+        try {
+            mappingService.insert(ctx.getBean(EntityExample.class));
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
     }
 }
