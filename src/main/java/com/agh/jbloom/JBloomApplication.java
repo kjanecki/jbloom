@@ -1,6 +1,6 @@
 package com.agh.jbloom;
 
-import com.agh.jbloom.components.MappingService;
+import com.agh.jbloom.components.mapping.MappingService;
 import com.agh.jbloom.config.AppConfig;
 import com.agh.jbloom.model.EntityExample;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,12 +14,6 @@ public class JBloomApplication {
     public static void main(String[] args) throws SQLException{
 
         ApplicationContext ctx = new AnnotationConfigApplicationContext(AppConfig.class);
-        MappingService mappingService = ctx.getBean(MappingService.class);
-        mappingService.registerEntity(EntityExample.class);
-        try {
-            mappingService.insert(ctx.getBean(EntityExample.class));
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        }
+
     }
 }
