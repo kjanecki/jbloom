@@ -1,4 +1,4 @@
-package com.agh.jbloom.components.databaseconnector;
+package com.agh.jbloom.components.dataaccess;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

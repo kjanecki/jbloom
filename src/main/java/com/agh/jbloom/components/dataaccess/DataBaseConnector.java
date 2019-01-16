@@ -1,6 +1,6 @@
-package com.agh.jbloom.components.databaseconnector;
+package com.agh.jbloom.components.dataaccess;
 
-import com.agh.jbloom.components.mapping.Table;
+import com.agh.jbloom.components.mapping.TableScheme;
 import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
@@ -23,7 +23,7 @@ public class DataBaseConnector {
 
 
 
-    private void createTable(Table table) {
+    private void createTable(TableScheme tableScheme) {
     }
 
 
