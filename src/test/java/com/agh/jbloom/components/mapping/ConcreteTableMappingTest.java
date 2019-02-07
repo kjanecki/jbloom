@@ -3,7 +3,6 @@ package com.agh.jbloom.components.mapping;
 import com.agh.jbloom.annotations.Entity;
 import com.agh.jbloom.annotations.Id;
 import com.agh.jbloom.annotations.Table;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.boot.test.context.TestComponent;
 
@@ -114,14 +113,13 @@ public class ConcreteTableMappingTest {
     public void canCreateMappingForSingleClass(){
         var columnMap = initializeBaseTableScheme();
         TableScheme table = new TableScheme(columnMap, "simple_entity");
-        System.out.println(columnMap.size());
         assertEquals(table,mappingService.mapToTable(SimpleEntity.class));
     }
 
     @Test
     public void canCreateMappingForDerivedClasses() {
         var columnMap = initializeBaseTableScheme();
-        columnMap.put("param", new ColumnScheme("param", "numeric", false));
+        columnMap.put("param", new ColumnScheme("param", "numeric(10,5)", false));
         TableScheme table1 = new TableScheme(columnMap, "simple_entity_impl");
 
         assertEquals(table1, mappingService.mapToTable(SimpleEntityImpl.class));
