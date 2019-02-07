@@ -1,6 +1,6 @@
 package com.agh.jbloom.config;
 
-import com.agh.jbloom.components.databaseconnector.DataSource;
+import com.agh.jbloom.components.dataaccess.DataSource;
 import com.agh.jbloom.model.EntityExample;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
