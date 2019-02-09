@@ -3,6 +3,7 @@ package com.agh.jbloom.components.mapping;
 import com.agh.jbloom.annotations.Entity;
 import com.agh.jbloom.annotations.Id;
 import com.agh.jbloom.annotations.Table;
+import com.agh.jbloom.components.query.BaseSqlTypeConverter;
 import org.junit.Test;
 import org.springframework.boot.test.context.TestComponent;
 
@@ -98,34 +99,40 @@ class SimpleEntityImpl2 extends SimpleEntityImpl{
 
 public class ConcreteTableMappingTest {
 
-    private MappingService mappingService = new ConcreteTableMappingService();
+    private MappingService mappingService;
+    Map<String, ColumnScheme> base;
 
-    Map<String, ColumnScheme> initializeBaseTableScheme(){
-        Map<String, ColumnScheme> columnMap = new HashMap<>();
-        columnMap.clear();
-        columnMap.put("id", new ColumnScheme("id", "integer", false));
-        columnMap.put("name", new ColumnScheme("name", "varchar(40)", false));
-        columnMap.put("description", new ColumnScheme("description", "varchar(40)", false));
-        return columnMap;
+    public ConcreteTableMappingTest() {
+        mappingService = new ConcreteTableMappingService(new BaseSqlTypeConverter());
+        initializeBaseTableScheme();
+    }
+
+    void initializeBaseTableScheme(){
+        base = new HashMap<>();
+        base.put("id", new ColumnScheme("id", "integer", false));
+        base.put("name", new ColumnScheme("name", "varchar(40)", false));
+        base.put("description", new ColumnScheme("description", "varchar(40)", false));
     }
 
     @Test
     public void canCreateMappingForSingleClass(){
-        var columnMap = initializeBaseTableScheme();
-        TableScheme table = new TableScheme(columnMap, "simple_entity");
+        TableScheme table = new TableScheme(base, "simple_entity");
         assertEquals(table,mappingService.mapToTable(SimpleEntity.class));
     }
 
     @Test
     public void canCreateMappingForDerivedClasses() {
-        var columnMap = initializeBaseTableScheme();
+        Map<String, ColumnScheme> columnMap = new HashMap<>();
         columnMap.put("param", new ColumnScheme("param", "numeric(10,5)", false));
+        columnMap.putAll(base);
         TableScheme table1 = new TableScheme(columnMap, "simple_entity_impl");
 
         assertEquals(table1, mappingService.mapToTable(SimpleEntityImpl.class));
 
-        columnMap.put("local_param", new ColumnScheme("local_param", "varchar(40)", false));
-        TableScheme table2 = new TableScheme(columnMap, "simple_entity_impl");
+        Map<String, ColumnScheme> columnMap2 = new HashMap<>();
+        columnMap2.put("local_param", new ColumnScheme("local_param", "varchar(40)", false));
+        columnMap2.putAll(columnMap);
+        TableScheme table2 = new TableScheme(columnMap2, "simple_entity_impl2");
 
         assertEquals(table2, mappingService.mapToTable(SimpleEntityImpl2.class));
     }
