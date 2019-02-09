@@ -15,16 +15,17 @@ public class ConcreteTableMappingService implements MappingService {
     }
 
     @Override
-    public TableScheme mapToTable(Class c) {
+    public Map<String, TableScheme> mapToTable(Class c) {
         var columns = generateColumnMap(c);
         var tableName = getTableName(c);
-        return new TableScheme(columns, tableName);
+        Map<String, TableScheme> map = new HashMap<>();
+        map.put(c.getSimpleName(),new TableScheme(columns, tableName));
+        return map;
     }
 
     private Map<String, ColumnScheme> generateColumnMap(Class c){
         Map<String, ColumnScheme> columns = new HashMap<>();
         Class current = c;
-
         do{
             columns.putAll(generateClassColumnMap(current));
         }while ((current = current.getSuperclass()) != null);

@@ -117,7 +117,9 @@ public class ConcreteTableMappingTest {
     @Test
     public void canCreateMappingForSingleClass(){
         TableScheme table = new TableScheme(base, "simple_entity");
-        assertEquals(table,mappingService.mapToTable(SimpleEntity.class));
+        Map<String, TableScheme> map = new HashMap<>();
+        map.put("SimpleEntity", table);
+        assertEquals(map,mappingService.mapToTable(SimpleEntity.class));
     }
 
     @Test
@@ -127,13 +129,16 @@ public class ConcreteTableMappingTest {
         columnMap.putAll(base);
         TableScheme table1 = new TableScheme(columnMap, "simple_entity_impl");
 
-        assertEquals(table1, mappingService.mapToTable(SimpleEntityImpl.class));
+        Map<String, TableScheme> map = new HashMap<>();
+        map.put("SimpleEntityImpl", table1);
+        assertEquals(map, mappingService.mapToTable(SimpleEntityImpl.class));
 
         Map<String, ColumnScheme> columnMap2 = new HashMap<>();
         columnMap2.put("local_param", new ColumnScheme("local_param", "varchar(40)", false));
         columnMap2.putAll(columnMap);
         TableScheme table2 = new TableScheme(columnMap2, "simple_entity_impl2");
-
-        assertEquals(table2, mappingService.mapToTable(SimpleEntityImpl2.class));
+        map.clear();
+        map.put("SimpleEntityImpl2", table2);
+        assertEquals(map, mappingService.mapToTable(SimpleEntityImpl2.class));
     }
 }
