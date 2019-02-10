@@ -8,7 +8,6 @@ import org.junit.Test;
 import org.springframework.boot.test.context.TestComponent;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -129,10 +128,8 @@ public class ConcreteTableMappingTest {
     @Test
     public void canCreateMappingForSingleClass() throws NoSuchFieldException, IllegalAccessException {
         TableScheme table = new TableScheme(base, "simple_entity");
-        MappingHandler mappingHandler = mappingService.createMapping(SimpleEntity.class);
-        Field f = InheritanceMapper.class.getDeclaredField("tableScheme");
-        f.setAccessible(true);
-        assertEquals(table,f.get(mappingHandler));
+        BaseMapperHandler handler = mappingService.createMapping(SimpleEntity.class);
+        assertEquals(table,handler.getMapper().getTableScheme());
     }
 
     @Test
@@ -141,16 +138,16 @@ public class ConcreteTableMappingTest {
         columnMap.put("param", new ColumnScheme("param", "numeric(10,5)", false));
         columnMap.putAll(base);
         TableScheme table1 = new TableScheme(columnMap, "simple_entity_impl");
-        MappingHandler m = mappingService.createMapping(SimpleEntityImpl.class);
-        assertEquals(table1, ((InheritanceMapper)m).getTableScheme());
+        BaseMapperHandler m = mappingService.createMapping(SimpleEntityImpl.class);
+        assertEquals(table1, m.getMapper().getTableScheme());
 
         Map<String, ColumnScheme> columnMap2 = new HashMap<>();
         columnMap2.put("local_param", new ColumnScheme("local_param", "varchar(40)", false));
         columnMap2.putAll(columnMap);
         TableScheme table2 = new TableScheme(columnMap2, "simple_entity_impl2");
-        assertEquals(table2, ((InheritanceMapper)mappingService.createMapping(SimpleEntityImpl2.class)).getTableScheme());
+        assertEquals(table2, mappingService.createMapping(SimpleEntityImpl2.class).getMapper().getTableScheme());
 
-        assertEquals(table2, ((InheritanceMapper)mappingService.createMapping(m, SimpleEntityImpl2.class)).getTableScheme());
+        assertEquals(table2, mappingService.createMapping(m, SimpleEntityImpl2.class).getMapper().getTableScheme());
     }
 }
 

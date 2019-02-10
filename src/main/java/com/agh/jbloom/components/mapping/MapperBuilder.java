@@ -1,8 +1,8 @@
 package com.agh.jbloom.components.mapping;
 
-public interface MappingHandlerBuilder {
+public interface MapperBuilder {
 
     void clear();
     void withClass(Class c);
-    MappingHandler build();
+    InheritanceMapper build();
 }
