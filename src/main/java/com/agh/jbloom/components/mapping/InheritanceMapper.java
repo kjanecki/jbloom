@@ -39,5 +39,14 @@ public class InheritanceMapper{
     public int hashCode() {
         return Objects.hash(mappingType, getTableScheme(), objectFieldAccess);
     }
+
+    @Override
+    public String toString() {
+        return "InheritanceMapper{" +
+                "mappingType='" + mappingType + '\'' +
+                ", tableScheme=" + tableScheme +
+                ", objectFieldAccess=" + objectFieldAccess +
+                '}';
+    }
 }
 

@@ -29,7 +29,19 @@ public class SimpleMapperBuilder implements MapperBuilder{
     }
 
     @Override
-    public void withClass(Class c){
+    public MapperBuilder withName(String tableName) {
+        this.tableName = tableName;
+        return this;
+    }
+
+    @Override
+    public MapperBuilder withSubjectClass(Class c) {
+        this.subject = c;
+        return this;
+    }
+
+    @Override
+    public MapperBuilder withClass(Class c){
 
         Map<String, Method> methods = new HashMap<>();
         for(var m : c.getDeclaredMethods())
@@ -46,6 +58,7 @@ public class SimpleMapperBuilder implements MapperBuilder{
             if((m = methods.get(objectFieldAccess.generateSetterName(fieldName))) != null)
                 objectFieldAccess.addSetter(fieldName,m);
         }
+        return this;
     }
 
     @Override

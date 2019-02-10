@@ -3,11 +3,11 @@ package com.agh.jbloom.components.mapping;
 import java.sql.ResultSet;
 import java.util.Objects;
 
-public class BaseMapperHandler implements MappingHandler {
+public class BaseMapperHandler implements Mapper {
 
-    private BaseMapperHandler parent;
     private Class subject;
     private InheritanceMapper mapper;
+    private BaseMapperHandler parent;
 
     public BaseMapperHandler(Class subject, InheritanceMapper mapper) {
         this.subject = subject;
@@ -18,6 +18,10 @@ public class BaseMapperHandler implements MappingHandler {
         this.subject = subject;
         this.parent = parent;
         this.mapper = mapper;
+    }
+
+    public void setParent(BaseMapperHandler parent) {
+        this.parent = parent;
     }
 
     public InheritanceMapper getMapper() {
@@ -51,5 +55,14 @@ public class BaseMapperHandler implements MappingHandler {
     @Override
     public int hashCode() {
         return Objects.hash(getParent(), getSubject(), getMapper());
+    }
+
+    @Override
+    public String toString() {
+        return "\nBaseMapperHandler{" +
+                "subject=" + subject +
+                ", mapper=" + mapper +
+                ", parent=" + parent +
+                '}';
     }
 }

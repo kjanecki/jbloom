@@ -5,21 +5,21 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class DatabaseScheme {
 
-    private Map<Class, MappingHandler> classHandlers;
+    private Map<Class, Mapper> classHandlers;
 
     public DatabaseScheme() {
         classHandlers = new ConcurrentHashMap<>();
     }
 
-    public void addHandler(Class c, MappingHandler h){
+    public void addHandler(Class c, Mapper h){
         classHandlers.put(c, h);
     }
 
-    public void addHandlers(Map<Class, MappingHandler> map){
+    public void addHandlers(Map<Class, Mapper> map){
         classHandlers.putAll(map);
     }
 
-    public MappingHandler findHandler(Class c){
+    public Mapper findHandler(Class c){
         return classHandlers.get(c);
     }
 }
