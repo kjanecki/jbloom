@@ -34,4 +34,20 @@ public class TableScheme {
     public int hashCode() {
         return Objects.hash(columnMap, name);
     }
+
+    public Map<String, ColumnScheme> getColumnMap() {
+        return columnMap;
+    }
+
+    public void setColumnMap(Map<String, ColumnScheme> columnMap) {
+        this.columnMap = columnMap;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

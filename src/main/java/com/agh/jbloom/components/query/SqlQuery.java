@@ -1,7 +1,33 @@
 package com.agh.jbloom.components.query;
 
-public interface SqlQuery {
+import com.agh.jbloom.components.mapping.TableScheme;
 
-    void add(Object obj);
-    String convertToString();
+public abstract class SqlQuery {
+
+    private TableScheme tableScheme;
+    private Object object;
+
+    public SqlQuery(TableScheme tableScheme, Object object) {
+        this.tableScheme = tableScheme;
+        this.object = object;
+    }
+
+    public TableScheme getTableScheme() {
+        return tableScheme;
+    }
+
+    public void setTableScheme(TableScheme tableScheme) {
+        this.tableScheme = tableScheme;
+    }
+
+    public Object getObject() {
+        return object;
+    }
+
+    public void setObject(Object object) {
+        this.object = object;
+    }
+
+    //void add(Object obj);
+    public abstract String toString();
 }

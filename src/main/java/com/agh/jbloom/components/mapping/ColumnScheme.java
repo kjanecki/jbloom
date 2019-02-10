@@ -57,4 +57,8 @@ public class ColumnScheme {
     public int hashCode() {
         return Objects.hash(name, type, isNullable);
     }
+
+    public String getName() {
+        return name;
+    }
 }
