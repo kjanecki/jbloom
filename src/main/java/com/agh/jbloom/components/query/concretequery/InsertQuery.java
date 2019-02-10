@@ -33,7 +33,7 @@ public class InsertQuery extends SqlQuery {
 
         query.append(" ) VALUES ( ");
 
-        // use DataAccess
+        // use ObjectFieldAccess
         for(var column: columns){
 
             try {

@@ -7,6 +7,8 @@ import com.agh.jbloom.components.query.BaseSqlTypeConverter;
 import org.junit.Test;
 import org.springframework.boot.test.context.TestComponent;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,6 +23,9 @@ class SimpleEntity{
     private int id;
     private String name;
     private String description;
+
+    public SimpleEntity() {
+    }
 
     public SimpleEntity(int id, String name, String description) {
         this.id = id;
@@ -60,6 +65,9 @@ class SimpleEntityImpl extends  SimpleEntity {
 
     private Double param;
 
+    public SimpleEntityImpl() {
+    }
+
     public SimpleEntityImpl(int id, String name, String description, Double param) {
         super(id, name, description);
         this.param = param;
@@ -80,6 +88,9 @@ class SimpleEntityImpl extends  SimpleEntity {
 class SimpleEntityImpl2 extends SimpleEntityImpl{
 
     private String local_param;
+
+    public SimpleEntityImpl2() {
+    }
 
     public SimpleEntityImpl2(int id, String name, String description, Double param, String local_param) {
         super(id, name, description, param);
@@ -114,31 +125,33 @@ public class ConcreteTableMappingTest {
         base.put("description", new ColumnScheme("description", "varchar(40)", false));
     }
 
+
     @Test
-    public void canCreateMappingForSingleClass(){
+    public void canCreateMappingForSingleClass() throws NoSuchFieldException, IllegalAccessException {
         TableScheme table = new TableScheme(base, "simple_entity");
-        Map<String, TableScheme> map = new HashMap<>();
-        map.put("SimpleEntity", table);
-        assertEquals(map,mappingService.mapToTable(SimpleEntity.class));
+        MappingHandler mappingHandler = mappingService.createMapping(SimpleEntity.class);
+        Field f = InheritanceMapper.class.getDeclaredField("tableScheme");
+        f.setAccessible(true);
+        assertEquals(table,f.get(mappingHandler));
     }
 
     @Test
-    public void canCreateMappingForDerivedClasses() {
+    public void canCreateMappingForDerivedClasses() throws NoSuchFieldException, IllegalAccessException {
         Map<String, ColumnScheme> columnMap = new HashMap<>();
         columnMap.put("param", new ColumnScheme("param", "numeric(10,5)", false));
         columnMap.putAll(base);
         TableScheme table1 = new TableScheme(columnMap, "simple_entity_impl");
-
-        Map<String, TableScheme> map = new HashMap<>();
-        map.put("SimpleEntityImpl", table1);
-        assertEquals(map, mappingService.mapToTable(SimpleEntityImpl.class));
+        MappingHandler m = mappingService.createMapping(SimpleEntityImpl.class);
+        assertEquals(table1, ((InheritanceMapper)m).getTableScheme());
 
         Map<String, ColumnScheme> columnMap2 = new HashMap<>();
         columnMap2.put("local_param", new ColumnScheme("local_param", "varchar(40)", false));
         columnMap2.putAll(columnMap);
         TableScheme table2 = new TableScheme(columnMap2, "simple_entity_impl2");
-        map.clear();
-        map.put("SimpleEntityImpl2", table2);
-        assertEquals(map, mappingService.mapToTable(SimpleEntityImpl2.class));
+        assertEquals(table2, ((InheritanceMapper)mappingService.createMapping(SimpleEntityImpl2.class)).getTableScheme());
+
+        assertEquals(table2, ((InheritanceMapper)mappingService.createMapping(m, SimpleEntityImpl2.class)).getTableScheme());
     }
 }
+
+

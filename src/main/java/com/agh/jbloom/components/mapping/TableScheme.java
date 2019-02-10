@@ -50,4 +50,8 @@ public class TableScheme {
     public void setName(String name) {
         this.name = name;
     }
+
+    public void union(TableScheme t2){
+        this.columnMap.putAll(t2.columnMap);
+    }
 }

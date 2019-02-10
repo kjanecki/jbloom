@@ -4,7 +4,12 @@ import java.util.Map;
 
 public class OneTableMappingService implements MappingService {
     @Override
-    public Map<String, TableScheme> mapToTable(Class c) {
+    public MappingHandler createMapping(MappingHandler handler, Class c) {
+        return null;
+    }
+
+    @Override
+    public MappingHandler createMapping(Class c) {
         return null;
     }
 }

@@ -8,7 +8,8 @@ import java.util.Map;
 @Component
 public interface MappingService {
 
-    public Map<String,TableScheme> mapToTable(Class c);
+    MappingHandler createMapping(MappingHandler handler, Class c);
+    MappingHandler createMapping(Class c);
 }
 
 
