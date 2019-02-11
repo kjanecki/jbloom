@@ -1,29 +1,31 @@
 package com.agh.jbloom.components.query.concretequery;
 
 import com.agh.jbloom.components.mapping.ColumnScheme;
+import com.agh.jbloom.components.mapping.InheritanceMapper;
 import com.agh.jbloom.components.mapping.TableScheme;
 import com.agh.jbloom.components.query.SqlQuery;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class InsertQuery extends SqlQuery {
 
-    public InsertQuery(TableScheme tableScheme, Object object) {
-        super(tableScheme, object);
+    public InsertQuery(InheritanceMapper inheritanceMapper, Object object) {
+        super(inheritanceMapper, object);
     }
 
     @Override
     public String toString() {
         StringBuilder query = new StringBuilder("INSERT INTO ");
 
-        query.append(getTableScheme().getName());
+        query.append(getInheritanceMapper().getTableScheme().getName());
 
         query.append(" ( ");
 
-        List<ColumnScheme> columns = new ArrayList<>(getTableScheme().getColumnMap().values());
+        List<ColumnScheme> columns = new ArrayList<>(getInheritanceMapper().getTableScheme().getColumnMap().values());
         for(var column: columns){
             query.append(column.getName());
             query.append(", ");
@@ -33,20 +35,15 @@ public class InsertQuery extends SqlQuery {
 
         query.append(" ) VALUES ( ");
 
-        // use ObjectFieldAccess
         for(var column: columns){
 
             try {
-                Field field = getObject().getClass().getDeclaredField(column.getName());
-
-                field.setAccessible(true);
-
-                Object value = field.get(getObject());
+                Object value = getInheritanceMapper().getObjectFieldAccess().getField(column.getName(), getObject());
 
                 query.append(value);
                 query.append(", ");
 
-            } catch (NoSuchFieldException | IllegalAccessException e) {
+            } catch (InvocationTargetException | IllegalAccessException e) {
                 e.printStackTrace();
             }
 

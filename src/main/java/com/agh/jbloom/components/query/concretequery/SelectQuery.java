@@ -1,19 +1,20 @@
 package com.agh.jbloom.components.query.concretequery;
 
 import com.agh.jbloom.components.mapping.ColumnScheme;
+import com.agh.jbloom.components.mapping.InheritanceMapper;
 import com.agh.jbloom.components.mapping.TableScheme;
 import com.agh.jbloom.components.query.SqlQuery;
 
 public class SelectQuery extends SqlQuery {
-    public SelectQuery(TableScheme tableScheme, Object object) {
-        super(tableScheme, object);
+    public SelectQuery(InheritanceMapper inheritanceMapper, Object object) {
+        super(inheritanceMapper, object);
     }
 
     @Override
     public String toString() {
         StringBuilder queryString = new StringBuilder("SELECT * FROM ");
 
-        queryString.append(getTableScheme().getName());
+        queryString.append(getInheritanceMapper().getTableScheme().getName());
 
         queryString.append(" WHERE ");
 
