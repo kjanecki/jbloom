@@ -14,15 +14,13 @@ public class UpdateQuery extends SqlQuery {
 
     @Override
     public String toString(){
-        StringBuilder query = new StringBuilder("UPDATE ");
-
-        query.append(getInheritanceMapper().getTableScheme().getName());
-
-        query.append(" SET ");
+        StringBuilder query = new StringBuilder("UPDATE ")
+                .append(getInheritanceMapper().getTableScheme().getName())
+                .append(" SET ");
 
         for(var column: getInheritanceMapper().getTableScheme().getColumnMap().values()){
-            query.append(column.getName());
-            query.append('=');
+            query.append(column.getName())
+                    .append('=');
             try {
                 query.append(getInheritanceMapper().getObjectFieldAccess().getField(column.getName(),getObject()));
             } catch (InvocationTargetException | IllegalAccessException e) {
@@ -33,6 +31,18 @@ public class UpdateQuery extends SqlQuery {
         }
 
         query.delete(query.length()-2, query.length());
+
+        query.append(" WHERE ");
+
+        String primary_key = getInheritanceMapper().getPrimaryKey().getColumnScheme().getName();
+
+        try {
+            query.append(primary_key)
+                    .append('=')
+                    .append(getInheritanceMapper().getObjectFieldAccess().getField(primary_key, getObject()));
+        } catch (InvocationTargetException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
 
         query.append(';');
 

@@ -21,19 +21,17 @@ public class InsertQuery extends SqlQuery {
     public String toString() {
         StringBuilder query = new StringBuilder("INSERT INTO ");
 
-        query.append(getInheritanceMapper().getTableScheme().getName());
-
-        query.append(" ( ");
+        query.append(getInheritanceMapper().getTableScheme().getName())
+                .append(" ( ");
 
         List<ColumnScheme> columns = new ArrayList<>(getInheritanceMapper().getTableScheme().getColumnMap().values());
         for(var column: columns){
-            query.append(column.getName());
-            query.append(", ");
+            query.append(column.getName())
+                    .append(", ");
         }
 
-        query.delete(query.length()-2, query.length());
-
-        query.append(" ) VALUES ( ");
+        query.delete(query.length()-2, query.length())
+                .append(" ) VALUES ( ");
 
         for(var column: columns){
 
@@ -41,11 +39,12 @@ public class InsertQuery extends SqlQuery {
                 Object value = getInheritanceMapper().getObjectFieldAccess().getField(column.getName(), getObject());
 
                 query.append(value);
-                query.append(", ");
 
             } catch (InvocationTargetException | IllegalAccessException e) {
                 e.printStackTrace();
             }
+
+            query.append(", ");
 
         }
 
