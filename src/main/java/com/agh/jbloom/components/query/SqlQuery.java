@@ -1,23 +1,23 @@
 package com.agh.jbloom.components.query;
 
-import com.agh.jbloom.components.mapping.InheritanceMapper;
+import com.agh.jbloom.components.mapping.mappers.TableAccess;
 
 public abstract class SqlQuery {
 
-    private InheritanceMapper inheritanceMapper;
+    private TableAccess tableAccess;
     private Object object;
 
-    public SqlQuery(InheritanceMapper inheritanceMapper, Object object) {
-        this.inheritanceMapper = inheritanceMapper;
+    public SqlQuery(TableAccess tableAccess, Object object) {
+        this.tableAccess = tableAccess;
         this.object = object;
     }
 
-    public InheritanceMapper getInheritanceMapper() {
-        return inheritanceMapper;
+    public TableAccess getTableAccess() {
+        return tableAccess;
     }
 
-    public void setInheritanceMapper(InheritanceMapper inheritanceMapper) {
-        this.inheritanceMapper = inheritanceMapper;
+    public void setTableAccess(TableAccess tableAccess) {
+        this.tableAccess = tableAccess;
     }
 
     public Object getObject() {

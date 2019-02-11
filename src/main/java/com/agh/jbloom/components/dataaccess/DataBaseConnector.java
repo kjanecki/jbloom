@@ -1,6 +1,6 @@
 package com.agh.jbloom.components.dataaccess;
 
-import com.agh.jbloom.components.mapping.TableScheme;
+import com.agh.jbloom.components.mapping.model.TableScheme;
 import org.springframework.stereotype.Component;
 
 import java.sql.Connection;

@@ -1,4 +1,4 @@
-package com.agh.jbloom.components.mapping;
+package com.agh.jbloom.components.mapping.model;
 
 import com.agh.jbloom.annotations.Element;
 import com.agh.jbloom.annotations.Nullable;

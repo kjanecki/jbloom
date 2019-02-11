@@ -1,5 +1,7 @@
 package com.agh.jbloom.components.mapping;
 
+import com.agh.jbloom.components.mapping.mappers.Mapper;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 

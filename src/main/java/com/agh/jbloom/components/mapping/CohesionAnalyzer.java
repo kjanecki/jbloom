@@ -1,7 +1,8 @@
 package com.agh.jbloom.components.mapping;
 
 import com.agh.jbloom.components.dataaccess.ConnectionPool;
-import com.agh.jbloom.components.dataaccess.DataBaseConnector;
+import com.agh.jbloom.components.mapping.mappers.TableAccess;
+import com.agh.jbloom.components.mapping.model.TableScheme;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -15,19 +16,19 @@ public class CohesionAnalyzer {
         this.connectionPool = connectionPool;
     }
 
-    public boolean checkCohesion(InheritanceMapper mapper) throws SQLException {
+    public boolean checkCohesion(TableAccess mapper) throws SQLException {
         Connection conn = connectionPool.acquireConnection();
 
         return false;
     }
 
-    public void createTable(InheritanceMapper mapper) throws SQLException {
+    public void createTable(TableAccess mapper) throws SQLException {
         Connection conn = connectionPool.acquireConnection();
         Statement stm = conn.createStatement();
         stm.executeUpdate(prepareCreateQuery(mapper));
     }
 
-    public String prepareCreateQuery(InheritanceMapper mapper){
+    public String prepareCreateQuery(TableAccess mapper){
         TableScheme scheme = mapper.getTableScheme();
         StringBuilder query = new StringBuilder("CREATE TABLE " + scheme.getName() + "(");
         var columnMap = scheme.getColumnMap();
@@ -62,7 +63,7 @@ public class CohesionAnalyzer {
         return query.toString();
     }
 
-    public void dropTable(InheritanceMapper mapper) throws SQLException {
+    public void dropTable(TableAccess mapper) throws SQLException {
         Connection conn = connectionPool.acquireConnection();
         Statement stm = conn.createStatement();
         stm.executeUpdate("DROP TABLE " + mapper.getTableScheme().getName());

@@ -1,16 +1,17 @@
-package com.agh.jbloom.components.mapping;
+package com.agh.jbloom.components.mapping.factories;
 
 import com.agh.jbloom.annotations.Table;
+import com.agh.jbloom.components.mapping.mappers.BaseInheritanceMapper;
 import org.springframework.stereotype.Component;
 
 
 @Component
-public interface MappingService {
+public interface MapperFactory {
 
-    BaseMapperHandler createMapping(BaseMapperHandler handler, Class c);
-    BaseMapperHandler createMapping(Class c, Class stop);
+    BaseInheritanceMapper createMapping(BaseInheritanceMapper handler, Class c);
+    BaseInheritanceMapper createMapping(Class c, Class stop);
 
-    default BaseMapperHandler createMapping(Class c) {
+    default BaseInheritanceMapper createMapping(Class c) {
         return createMapping(c,Object.class);
     }
 

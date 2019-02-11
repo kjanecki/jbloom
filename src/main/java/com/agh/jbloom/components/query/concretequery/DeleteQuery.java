@@ -1,11 +1,11 @@
 package com.agh.jbloom.components.query.concretequery;
 
-import com.agh.jbloom.components.mapping.InheritanceMapper;
+import com.agh.jbloom.components.mapping.mappers.TableAccess;
 import com.agh.jbloom.components.query.SqlQuery;
 
 public class DeleteQuery extends SqlQuery {
-    public DeleteQuery(InheritanceMapper inheritanceMapper, Object object) {
-        super(inheritanceMapper, object);
+    public DeleteQuery(TableAccess tableAccess, Object object) {
+        super(tableAccess, object);
     }
 
     @Override
@@ -13,15 +13,15 @@ public class DeleteQuery extends SqlQuery {
 
         String query = "";
 
-        String primary_key = getInheritanceMapper().getPrimaryKey().getColumnScheme().getName();
+        String primary_key = getTableAccess().getPrimaryKey().getColumnScheme().getName();
 
         try {
             query = "DELETE FROM " +
-                    getInheritanceMapper().getTableScheme().getName() +
+                    getTableAccess().getTableScheme().getName() +
                     " WHERE " +
                     primary_key +
                     '=' +
-                    getInheritanceMapper().getObjectFieldAccess().getField(primary_key, getObject()) +
+                    getTableAccess().getObjectFieldAccess().getField(primary_key, getObject()) +
                     ';';
         }catch (Exception e){
             e.printStackTrace();

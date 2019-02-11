@@ -1,4 +1,4 @@
-package com.agh.jbloom.components.mapping;
+package com.agh.jbloom.components.mapping.model;
 
 import java.util.Map;
 import java.util.Objects;

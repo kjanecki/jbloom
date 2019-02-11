@@ -1,7 +1,7 @@
 package com.agh.jbloom.components.query.concretequery;
 
-import com.agh.jbloom.components.mapping.ColumnScheme;
-import com.agh.jbloom.components.mapping.InheritanceMapper;
+import com.agh.jbloom.components.mapping.model.ColumnScheme;
+import com.agh.jbloom.components.mapping.mappers.TableAccess;
 import com.agh.jbloom.components.query.SqlQuery;
 
 import java.lang.reflect.InvocationTargetException;
@@ -10,18 +10,18 @@ import java.util.List;
 
 public class InsertQuery extends SqlQuery {
 
-    public InsertQuery(InheritanceMapper inheritanceMapper, Object object) {
-        super(inheritanceMapper, object);
+    public InsertQuery(TableAccess tableAccess, Object object) {
+        super(tableAccess, object);
     }
 
     @Override
     public String toString() {
         StringBuilder query = new StringBuilder("INSERT INTO ");
 
-        query.append(getInheritanceMapper().getTableScheme().getName())
+        query.append(getTableAccess().getTableScheme().getName())
                 .append(" ( ");
 
-        List<ColumnScheme> columns = new ArrayList<>(getInheritanceMapper().getTableScheme().getColumnMap().values());
+        List<ColumnScheme> columns = new ArrayList<>(getTableAccess().getTableScheme().getColumnMap().values());
         for(var column: columns){
             query.append(column.getName())
                     .append(", ");
@@ -33,9 +33,9 @@ public class InsertQuery extends SqlQuery {
         for(var column: columns){
 
             try {
-                Object value = getInheritanceMapper().getObjectFieldAccess().getField(column.getName(), getObject());
+                Object value = getTableAccess().getObjectFieldAccess().getField(column.getName(), getObject());
 
-                query.append(value);
+                query.append("'").append(value).append("'");
 
             } catch (InvocationTargetException | IllegalAccessException e) {
                 e.printStackTrace();

@@ -1,5 +1,11 @@
 package com.agh.jbloom.components.mapping;
 
+import com.agh.jbloom.components.mapping.factories.ConcreteTableMapperFactory;
+import com.agh.jbloom.components.mapping.factories.MapperFactory;
+import com.agh.jbloom.components.mapping.mappers.BaseInheritanceMapper;
+import com.agh.jbloom.components.mapping.model.ColumnScheme;
+import com.agh.jbloom.components.mapping.model.SimpleTableAccessBuilder;
+import com.agh.jbloom.components.mapping.model.TableScheme;
 import com.agh.jbloom.components.query.BaseSqlTypeConverter;
 import org.junit.Test;
 import java.util.HashMap;
@@ -9,11 +15,11 @@ import static org.junit.Assert.assertEquals;
 
 public class ConcreteTableMappingTest {
 
-    private MappingService mappingService;
+    private MapperFactory mapperFactory;
     Map<String, ColumnScheme> base;
 
     public ConcreteTableMappingTest() {
-        mappingService = new ConcreteTableMappingService(new SimpleMapperBuilder(new BaseSqlTypeConverter()));
+        mapperFactory = new ConcreteTableMapperFactory(new SimpleTableAccessBuilder(new BaseSqlTypeConverter()));
         initializeBaseTableScheme();
     }
 
@@ -28,8 +34,8 @@ public class ConcreteTableMappingTest {
     @Test
     public void canCreateMappingForSingleClass(){
         TableScheme table = new TableScheme(base, "simple_entity");
-        BaseMapperHandler handler = mappingService.createMapping(SimpleEntity.class);
-        assertEquals(table,handler.getMapper().getTableScheme());
+        BaseInheritanceMapper handler = mapperFactory.createMapping(SimpleEntity.class);
+        assertEquals(table,handler.getTableAccess().getTableScheme());
     }
 
     @Test
@@ -38,16 +44,16 @@ public class ConcreteTableMappingTest {
         columnMap.put("param", new ColumnScheme("param", "numeric(10,5)", false));
         columnMap.putAll(base);
         TableScheme table1 = new TableScheme(columnMap, "simple_entity_impl");
-        BaseMapperHandler m = mappingService.createMapping(SimpleEntityImpl.class);
-        assertEquals(table1, m.getMapper().getTableScheme());
+        BaseInheritanceMapper m = mapperFactory.createMapping(SimpleEntityImpl.class);
+        assertEquals(table1, m.getTableAccess().getTableScheme());
 
         Map<String, ColumnScheme> columnMap2 = new HashMap<>();
         columnMap2.put("local_param", new ColumnScheme("local_param", "varchar(40)", false));
         columnMap2.putAll(columnMap);
         TableScheme table2 = new TableScheme(columnMap2, "simple_entity_impl2");
-        assertEquals(table2, mappingService.createMapping(SimpleEntityImpl2.class).getMapper().getTableScheme());
+        assertEquals(table2, mapperFactory.createMapping(SimpleEntityImpl2.class).getTableAccess().getTableScheme());
 
-        assertEquals(table2, mappingService.createMapping(m, SimpleEntityImpl2.class).getMapper().getTableScheme());
+        assertEquals(table2, mapperFactory.createMapping(m, SimpleEntityImpl2.class).getTableAccess().getTableScheme());
     }
 }
 

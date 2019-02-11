@@ -1,7 +1,8 @@
-package com.agh.jbloom.components.mapping;
+package com.agh.jbloom.components.mapping.model;
 
 import com.agh.jbloom.annotations.Id;
 import com.agh.jbloom.components.dataaccess.ObjectFieldAccess;
+import com.agh.jbloom.components.mapping.mappers.TableAccess;
 import com.agh.jbloom.components.query.SqlTypeConverter;
 
 import java.lang.reflect.Method;
@@ -10,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SimpleMapperBuilder implements MapperBuilder{
+public class SimpleTableAccessBuilder implements TableAccessBuilder {
 
     private ObjectFieldAccess objectFieldAccess;
     private Map<String, ColumnScheme> columnSchemeMap;
@@ -20,7 +21,7 @@ public class SimpleMapperBuilder implements MapperBuilder{
     private SqlTypeConverter typeConverter;
     private Class subject;
 
-    public SimpleMapperBuilder(SqlTypeConverter typeConverter) {
+    public SimpleTableAccessBuilder(SqlTypeConverter typeConverter) {
         this.typeConverter = typeConverter;
         clear();
     }
@@ -35,19 +36,19 @@ public class SimpleMapperBuilder implements MapperBuilder{
     }
 
     @Override
-    public MapperBuilder withName(String tableName) {
+    public TableAccessBuilder withName(String tableName) {
         this.tableName = tableName;
         return this;
     }
 
     @Override
-    public MapperBuilder withSubjectClass(Class c) {
+    public TableAccessBuilder withSubjectClass(Class c) {
         this.subject = c;
         return this;
     }
 
     @Override
-    public MapperBuilder withClass(Class c){
+    public TableAccessBuilder withClass(Class c){
 
         Map<String, Method> methods = new HashMap<>();
         for(var m : c.getDeclaredMethods())
@@ -80,24 +81,25 @@ public class SimpleMapperBuilder implements MapperBuilder{
     }
 
     @Override
-    public MapperBuilder withPrimaryKey(Key key) {
+    public TableAccessBuilder withPrimaryKey(Key key) {
         columnSchemeMap.put(key.getColumnScheme().getName(), key.getColumnScheme());
+        objectFieldAccess.union(key.getFieldAccess());
         primaryKey = key;
         return this;
     }
 
     @Override
-    public MapperBuilder withForeignKey(Key key) {
+    public TableAccessBuilder withForeignKey(Key key) {
         columnSchemeMap.put(key.getColumnScheme().getName(), key.getColumnScheme());
         foreignKeys.add(key);
         return this;
     }
 
     @Override
-    public InheritanceMapper build(){
-        InheritanceMapper mapper;
+    public TableAccess build(){
+        TableAccess mapper;
         TableScheme tableScheme = new TableScheme(columnSchemeMap, tableName);
-        mapper = new InheritanceMapper("ConcreteTable", tableScheme, objectFieldAccess, primaryKey, foreignKeys);
+        mapper = new TableAccess("ConcreteTable", tableScheme, objectFieldAccess, primaryKey, foreignKeys);
         clear();
         return mapper;
     }
