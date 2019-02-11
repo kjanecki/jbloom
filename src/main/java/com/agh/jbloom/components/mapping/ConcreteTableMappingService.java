@@ -1,19 +1,11 @@
 package com.agh.jbloom.components.mapping;
 
-import com.agh.jbloom.annotations.Table;
-import com.agh.jbloom.components.dataaccess.ObjectFieldAccess;
-import com.agh.jbloom.components.query.SqlTypeConverter;
-
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
-
 public class ConcreteTableMappingService implements MappingService {
 
-    private SqlTypeConverter typeConverter;
+    private MapperBuilder handlerBuilder;
 
-    public ConcreteTableMappingService(SqlTypeConverter typeConverter) {
-        this.typeConverter = typeConverter;
+    public ConcreteTableMappingService(MapperBuilder handlerBuilder) {
+        this.handlerBuilder = handlerBuilder;
     }
 
     @Override
@@ -27,9 +19,7 @@ public class ConcreteTableMappingService implements MappingService {
     public BaseMapperHandler createMapping(Class c, Class stop) {
 
         String tableName = getTableName(c);
-
-        MapperBuilder handlerBuilder =
-                new SimpleMapperBuilder(c, tableName, typeConverter);
+        handlerBuilder.withSubjectClass(c).withName(tableName);
 
         Class current = c;
         do{

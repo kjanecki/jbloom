@@ -13,7 +13,7 @@ public class ConcreteTableMappingTest {
     Map<String, ColumnScheme> base;
 
     public ConcreteTableMappingTest() {
-        mappingService = new ConcreteTableMappingService(new BaseSqlTypeConverter());
+        mappingService = new ConcreteTableMappingService(new SimpleMapperBuilder(new BaseSqlTypeConverter()));
         initializeBaseTableScheme();
     }
 

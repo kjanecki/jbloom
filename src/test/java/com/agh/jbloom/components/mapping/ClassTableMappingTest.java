@@ -8,7 +8,7 @@ public class ClassTableMappingTest {
     MappingService service;
 
     public ClassTableMappingTest() {
-        this.service = new ClassTableMappingService(new BaseSqlTypeConverter());
+        this.service = new ClassTableMappingService(new SimpleMapperBuilder(new BaseSqlTypeConverter()));
     }
 
     @Test

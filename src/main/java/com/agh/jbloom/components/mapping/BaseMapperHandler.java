@@ -63,6 +63,6 @@ public class BaseMapperHandler implements Mapper {
                 "subject=" + subject +
                 ", mapper=" + mapper +
                 ", parent=" + parent +
-                '}';
+                '}' + '\n';
     }
 }
