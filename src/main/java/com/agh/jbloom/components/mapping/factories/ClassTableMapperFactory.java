@@ -46,6 +46,7 @@ public class ClassTableMapperFactory implements MapperFactory {
                 String references = parentMapper.getTableScheme().getName()+"("+parentPrimaryKey.getColumnScheme().getName()+")";
                 Key childPrimaryKey = new Key(parentPrimaryKey.getColumnScheme(), parentPrimaryKey.getFieldAccess(), references);
                 handlerBuilder.withPrimaryKey(childPrimaryKey);
+                handlerBuilder.withForeignKey(childPrimaryKey);
                 return new BaseInheritanceMapper(c, parent, handlerBuilder.build());
             }
         }

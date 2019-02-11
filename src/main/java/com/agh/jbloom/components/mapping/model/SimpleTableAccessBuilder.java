@@ -91,6 +91,7 @@ public class SimpleTableAccessBuilder implements TableAccessBuilder {
     @Override
     public TableAccessBuilder withForeignKey(Key key) {
         columnSchemeMap.put(key.getColumnScheme().getName(), key.getColumnScheme());
+        objectFieldAccess.union(key.getFieldAccess());
         foreignKeys.add(key);
         return this;
     }
