@@ -1,11 +1,9 @@
-package com.agh.jbloom.components.mapping;
+package com.agh.jbloom.model;
 
 import com.agh.jbloom.annotations.Entity;
 import com.agh.jbloom.annotations.Id;
 import com.agh.jbloom.annotations.Table;
-import org.springframework.boot.test.context.TestComponent;
 
-@TestComponent
 @Entity
 @Table(name = "simple_entity")
 public class SimpleEntity{
