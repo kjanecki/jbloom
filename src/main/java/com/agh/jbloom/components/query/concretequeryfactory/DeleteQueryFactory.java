@@ -1,7 +1,6 @@
 package com.agh.jbloom.components.query.concretequeryfactory;
 
 import com.agh.jbloom.components.mapping.InheritanceMapper;
-import com.agh.jbloom.components.mapping.TableScheme;
 import com.agh.jbloom.components.query.concretequery.DeleteQuery;
 import com.agh.jbloom.components.query.QueryFactory;
 import com.agh.jbloom.components.query.SqlQuery;

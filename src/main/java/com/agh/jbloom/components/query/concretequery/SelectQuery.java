@@ -1,8 +1,6 @@
 package com.agh.jbloom.components.query.concretequery;
 
-import com.agh.jbloom.components.mapping.ColumnScheme;
 import com.agh.jbloom.components.mapping.InheritanceMapper;
-import com.agh.jbloom.components.mapping.TableScheme;
 import com.agh.jbloom.components.query.SqlQuery;
 
 public class SelectQuery extends SqlQuery {

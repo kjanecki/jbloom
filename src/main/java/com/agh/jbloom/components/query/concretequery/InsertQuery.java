@@ -2,14 +2,11 @@ package com.agh.jbloom.components.query.concretequery;
 
 import com.agh.jbloom.components.mapping.ColumnScheme;
 import com.agh.jbloom.components.mapping.InheritanceMapper;
-import com.agh.jbloom.components.mapping.TableScheme;
 import com.agh.jbloom.components.query.SqlQuery;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class InsertQuery extends SqlQuery {
 

@@ -1,7 +1,6 @@
 package com.agh.jbloom.components.query;
 
 import com.agh.jbloom.components.mapping.InheritanceMapper;
-import com.agh.jbloom.components.mapping.TableScheme;
 
 public abstract class SqlQuery {
 
