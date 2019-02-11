@@ -34,6 +34,14 @@ public class ColumnScheme {
         this.isNullable = field.isAnnotationPresent(Nullable.class);
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public boolean isNullable() {
+        return isNullable;
+    }
+
     @Override
     public String toString() {
         return "ColumnScheme{" +

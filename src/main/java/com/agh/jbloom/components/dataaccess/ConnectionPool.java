@@ -1,22 +1,19 @@
 package com.agh.jbloom.components.dataaccess;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Observable;
 
 public class ConnectionPool extends Observable {
 
-    private DataBaseConnector dataBaseConnector;
+    private DataSource dataSource;
 
-    public ConnectionPool(DataBaseConnector dataBaseConnector) {
-        this.dataBaseConnector = dataBaseConnector;
+    public ConnectionPool(DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
-    public Connection getConnection(){
-        return null;
-    }
-
-    public Connection acquireConnection(){
-        return null;
+    public Connection acquireConnection() throws SQLException {
+        return dataSource.getConnection();
     }
 
     public void releaseConnection(Connection connection){
