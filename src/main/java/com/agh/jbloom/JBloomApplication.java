@@ -19,14 +19,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Type;
 import java.sql.SQLException;
 
 @SpringBootApplication
 public class JBloomApplication {
 
-    public static void main(String[] args) throws SQLException, IllegalAccessException {
+    public static void main(String[] args) throws SQLException{
 
         ApplicationContext ctx = new AnnotationConfigApplicationContext(AppConfig.class);
 
