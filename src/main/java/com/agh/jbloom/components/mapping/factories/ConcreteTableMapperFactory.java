@@ -20,13 +20,17 @@ public class ConcreteTableMapperFactory implements MapperFactory {
         String tableName = getTableName(c);
         handlerBuilder.withSubjectClass(c)
                 .withName(tableName)
-                .withClass(c);
+                .withClass(c)
+                .withPrimaryKey(parent.getTableAccess().getPrimaryKey());
 
         return new ConcreteTableMapper(c, handlerBuilder.build(), parent);
     }
 
     @Override
-    public BaseInheritanceMapper createMapping(Class c) {
+    public BaseInheritanceMapper createMapping(Class c) throws IllegalAccessException {
+        if(!c.getSuperclass().equals(Object.class))
+            throw new IllegalAccessException("Subject of BaseInheritanceMapper has to be a superclass of second argument");
+
 
         String tableName = getTableName(c);
         handlerBuilder.withSubjectClass(c)

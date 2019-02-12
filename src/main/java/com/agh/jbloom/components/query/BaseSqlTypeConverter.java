@@ -11,7 +11,7 @@ public class BaseSqlTypeConverter implements SqlTypeConverter {
         else if (type.equals("String"))
             return "varchar(40)";
         else if (type.equals("Double") || type.equals("double"))
-            return "numeric(10,5)";
+            return "double";
         else
             return "";
     }

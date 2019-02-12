@@ -9,11 +9,7 @@ import org.springframework.stereotype.Component;
 public interface MapperFactory {
 
     BaseInheritanceMapper createMapping(Class c, BaseInheritanceMapper parent) throws IllegalAccessException;
-    BaseInheritanceMapper createMapping(Class c);
-
-//    default BaseInheritanceMapper createMapping(Class c) {
-//        return createMapping(c,Object.class);
-//    }
+    BaseInheritanceMapper createMapping(Class c) throws IllegalAccessException;
 
     default String getTableName(Class c){
         if(c.isAnnotationPresent(Table.class))

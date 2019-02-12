@@ -24,6 +24,17 @@ public class SimpleEntityImpl2 extends SimpleEntityImpl{
     public void setLocal_param(String local_param) {
         this.local_param = local_param;
     }
+
+    @Override
+    public String toString() {
+        return "SimpleEntityImpl2{" +
+                "local_param='" + local_param + '\'' +
+                ", param=" + param +
+                ", id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }
 
 

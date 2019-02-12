@@ -7,7 +7,7 @@ import com.agh.jbloom.annotations.Table;
 @Table(name = "simple_entity_impl")
 public class SimpleEntityImpl extends  SimpleEntity {
 
-    private Double param;
+    protected Double param;
 
     public SimpleEntityImpl() {
     }

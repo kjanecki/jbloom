@@ -23,10 +23,10 @@ public class ObjectFieldAccess {
         setters.put(fieldName,setter);
     }
 
-    public void setField(String fieldName, Object subject, Object value) throws InvocationTargetException, IllegalAccessException {
+    public <T> void setField(String fieldName, Object subject, Object value, Class<T> entityType) throws InvocationTargetException, IllegalAccessException {
         Method setter;
-        if ((setter = getters.get(fieldName)) != null){
-            setter.invoke(subject, value);
+        if ((setter = setters.get(fieldName)) != null){
+            setter.invoke(subject, entityType.cast(value));
         }
     }
 

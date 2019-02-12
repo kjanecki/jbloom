@@ -37,7 +37,9 @@ public class ClassTableMapperFactory implements MapperFactory {
 
 
     @Override
-    public BaseInheritanceMapper createMapping(Class c) {
+    public BaseInheritanceMapper createMapping(Class c) throws IllegalAccessException {
+        if(!c.getSuperclass().equals(Object.class))
+            throw new IllegalAccessException("Subject of BaseInheritanceMapper has to be a superclass of second argument");
 
         String tableName = getTableName(c);
         handlerBuilder
