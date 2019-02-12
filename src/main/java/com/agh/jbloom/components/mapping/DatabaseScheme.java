@@ -1,5 +1,6 @@
 package com.agh.jbloom.components.mapping;
 
+import com.agh.jbloom.components.mapping.mappers.BaseInheritanceMapper;
 import com.agh.jbloom.components.mapping.mappers.Mapper;
 
 import java.util.Map;
@@ -23,5 +24,18 @@ public class DatabaseScheme {
 
     public Mapper findHandler(Class c){
         return classHandlers.get(c);
+    }
+
+    public void addTable(BaseInheritanceMapper mapper){
+
+    }
+
+    public void deleteTable(BaseInheritanceMapper mapper){
+
+    }
+
+    public boolean checkIfExist(BaseInheritanceMapper mapper){
+
+        return false;
     }
 }

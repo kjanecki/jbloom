@@ -1,12 +1,12 @@
 package com.agh.jbloom.components.mapping;
 
 import com.agh.jbloom.components.dataaccess.ConnectionPool;
+import com.agh.jbloom.components.mapping.mappers.BaseInheritanceMapper;
+import com.agh.jbloom.components.mapping.mappers.ConcreteTableMapper;
 import com.agh.jbloom.components.mapping.mappers.TableAccess;
 import com.agh.jbloom.components.mapping.model.TableScheme;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class CohesionAnalyzer {
 
@@ -70,4 +70,24 @@ public class CohesionAnalyzer {
     }
 
 
+    public boolean chechCohesion(DatabaseMetaData databaseMetaData, DatabaseScheme databaseScheme, BaseInheritanceMapper mapper) throws SQLException {
+
+        //ResultSet tables = databaseMetaData.getTables(null, null, null, null);
+
+        // 1. nowy obiekt -> dodajemy go
+
+
+        // 2, jezeli usunelimsy jakis obiekt -> wyjatek ze zniklal jakis obiekt
+
+
+        // 3. jezeli usunelismy columne -> zostawaimy ja w db ustawiamy default na null + wyjatek(co jezeli PK (albo FK))?
+
+
+        // 4. nowa kolumna -> moze byc null to wypelniamy, jezeli jest default to wypelniamy, jezeli ani to ani to to wyjatek
+
+
+        // 5. jezeli zmiana typy columny -> wyjatek
+
+        return true;
+    }
 }
