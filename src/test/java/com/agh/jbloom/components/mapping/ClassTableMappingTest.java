@@ -19,10 +19,14 @@ public class ClassTableMappingTest {
 
     @Test
     public void Hello() throws InvocationTargetException, IllegalAccessException {
-        BaseInheritanceMapper handler = service.createMapping(SimpleEntityImpl2.class);
-        System.out.println(handler);
+        var m = service.createMapping(SimpleEntity.class);
+        var m1 = service.createMapping(SimpleEntityImpl.class, m);
+        var m2 = service.createMapping(SimpleEntityImpl2.class, m1);
+
+        System.out.println(m2);
         SimpleEntityImpl2 s = new SimpleEntityImpl2();
 
-        handler.getTableAccess().getObjectFieldAccess().getField("local_param", s);
+        m2.getTableAccess().getObjectFieldAccess().getField("local_param", s);
+        System.out.println();
     }
 }

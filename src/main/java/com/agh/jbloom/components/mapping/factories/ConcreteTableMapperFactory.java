@@ -1,5 +1,6 @@
 package com.agh.jbloom.components.mapping.factories;
 
+import com.agh.jbloom.components.mapping.mappers.ConcreteTableMapper;
 import com.agh.jbloom.components.mapping.model.TableAccessBuilder;
 import com.agh.jbloom.components.mapping.mappers.BaseInheritanceMapper;
 
@@ -12,22 +13,32 @@ public class ConcreteTableMapperFactory implements MapperFactory {
     }
 
     @Override
-    public BaseInheritanceMapper createMapping(BaseInheritanceMapper handler, Class c) {
-        BaseInheritanceMapper newHandler = createMapping(c, handler.getSubject());
-        newHandler.getTableAccess().union(handler.getTableAccess());
-        return newHandler;
+    public BaseInheritanceMapper createMapping(Class c, BaseInheritanceMapper parent) throws IllegalAccessException {
+        if(!c.getSuperclass().equals(parent.getSubject()))
+            throw new IllegalAccessException("Subject of BaseInheritanceMapper has to be a superclass of second argument");
+
+        String tableName = getTableName(c);
+        handlerBuilder.withSubjectClass(c)
+                .withName(tableName)
+                .withClass(c);
+
+        return new ConcreteTableMapper(c, handlerBuilder.build(), parent);
     }
 
     @Override
-    public BaseInheritanceMapper createMapping(Class c, Class stop) {
+    public BaseInheritanceMapper createMapping(Class c) {
 
         String tableName = getTableName(c);
-        handlerBuilder.withSubjectClass(c).withName(tableName);
+        handlerBuilder.withSubjectClass(c)
+                .withName(tableName)
+                .withClass(c);
 
-        Class current = c;
-        do{
-            handlerBuilder.withClass(current);
-        }while ((current = current.getSuperclass()) != stop);
-        return new BaseInheritanceMapper(c, handlerBuilder.build());
+        return new ConcreteTableMapper(c, handlerBuilder.build());
+
+//        Class current = c;
+//        do{
+//            handlerBuilder.withClass(current);
+//        }while ((current = current.getSuperclass()) != parent);
+//        return new BaseInheritanceMapper(c, handlerBuilder.build());
     }
 }

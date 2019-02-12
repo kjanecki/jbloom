@@ -10,33 +10,18 @@ import com.agh.jbloom.components.query.concretequeryfactory.InsertQueryFactory;
 import java.sql.SQLException;
 import java.util.Objects;
 
-public class BaseInheritanceMapper implements Mapper {
+public abstract class BaseInheritanceMapper implements Mapper {
 
-    private Class subject;
+    protected Class subject;
     protected TableAccess tableAccess;
-    private BaseInheritanceMapper parent;
 
     public BaseInheritanceMapper(Class subject, TableAccess tableAccess) {
         this.subject = subject;
         this.tableAccess = tableAccess;
     }
 
-    public BaseInheritanceMapper(Class subject, BaseInheritanceMapper parent, TableAccess tableAccess) {
-        this.subject = subject;
-        this.parent = parent;
-        this.tableAccess = tableAccess;
-    }
-
-    public void setParent(BaseInheritanceMapper parent) {
-        this.parent = parent;
-    }
-
     public TableAccess getTableAccess() {
         return tableAccess;
-    }
-
-    public BaseInheritanceMapper getParent() {
-        return parent;
     }
 
     public Class getSubject() {
@@ -48,27 +33,24 @@ public class BaseInheritanceMapper implements Mapper {
         if (this == object) return true;
         if (!(object instanceof BaseInheritanceMapper)) return false;
         BaseInheritanceMapper that = (BaseInheritanceMapper) object;
-        return Objects.equals(getParent(), that.getParent()) &&
-                Objects.equals(getSubject(), that.getSubject()) &&
+        return Objects.equals(getSubject(), that.getSubject()) &&
                 Objects.equals(getTableAccess(), that.getTableAccess());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getParent(), getSubject(), getTableAccess());
+        return Objects.hash(getSubject(), getTableAccess());
     }
 
     @Override
     public String toString() {
-        return "\nBaseInheritanceMapper{" +
+        return "BaseInheritanceMapper{" +
                 "subject=" + subject +
                 ", tableAccess=" + tableAccess +
-                ", parent=" + parent +
-                '}' + '\n';
+                '}';
     }
 
-
-//    @Override
+    //    @Override
 //    public void insert(Object o, ConnectionPool connectionPool) throws SQLException {
 //        Transaction transaction = new Transaction(connectionPool);
 //        transaction.addQuery(insertFactory.createQuery(tableAccess, o).toString());
@@ -79,18 +61,18 @@ public class BaseInheritanceMapper implements Mapper {
 //        transaction.commit();
 //    }
 
-
-    @Override
-    public void buildTransaction(Transaction transaction, Object o, QueryFactory factory) throws SQLException {
-        transaction.addQuery(factory.createQuery(tableAccess, o).toString());
-        BaseInheritanceMapper next = this;
-        while((next = next.parent) != null){
-            transaction.addQuery(factory.createQuery(next.tableAccess, o).toString());
-        }
-    }
-
-    @Override
-    public Object find(IdentityField id, ConnectionPool connectionPool, QueryFactory factory) throws SQLException {
-        return null;
-    }
+//
+//    @Override
+//    public void buildTransaction(Transaction transaction, Object o, QueryFactory factory) throws SQLException {
+//        transaction.addQuery(factory.createQuery(tableAccess, o).toString());
+//        BaseInheritanceMapper next = this;
+//        while((next = next.parent) != null){
+//            transaction.addQuery(factory.createQuery(next.tableAccess, o).toString());
+//        }
+//    }
+//
+//    @Override
+//    public Object find(IdentityField id, ConnectionPool connectionPool, QueryFactory factory) throws SQLException {
+//        return null;
+//    }
 }

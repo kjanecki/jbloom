@@ -5,12 +5,12 @@ import com.agh.jbloom.components.mapping.mappers.BaseInheritanceMapper;
 public class SingleTableMapperFactory implements MapperFactory {
 
     @Override
-    public BaseInheritanceMapper createMapping(BaseInheritanceMapper handler, Class c) {
+    public BaseInheritanceMapper createMapping(Class c, BaseInheritanceMapper parent) throws IllegalAccessException {
         return null;
     }
 
     @Override
-    public BaseInheritanceMapper createMapping(Class c, Class stop) {
+    public BaseInheritanceMapper createMapping(Class c) {
         return null;
     }
 }

@@ -39,21 +39,24 @@ public class ConcreteTableMappingTest {
     }
 
     @Test
-    public void canCreateMappingForDerivedClasses(){
+    public void canCreateMappingForDerivedClasses() throws IllegalAccessException {
         Map<String, ColumnScheme> columnMap = new HashMap<>();
         columnMap.put("param", new ColumnScheme("param", "numeric(10,5)", false));
         columnMap.putAll(base);
         TableScheme table1 = new TableScheme(columnMap, "simple_entity_impl");
-        BaseInheritanceMapper m = mapperFactory.createMapping(SimpleEntityImpl.class);
-        assertEquals(table1, m.getTableAccess().getTableScheme());
+        BaseInheritanceMapper m = mapperFactory.createMapping(SimpleEntity.class);
+        var m2 = mapperFactory.createMapping(SimpleEntityImpl.class, m);
+
+        assertEquals(table1, m2.getTableAccess().getTableScheme());
 
         Map<String, ColumnScheme> columnMap2 = new HashMap<>();
         columnMap2.put("local_param", new ColumnScheme("local_param", "varchar(40)", false));
         columnMap2.putAll(columnMap);
         TableScheme table2 = new TableScheme(columnMap2, "simple_entity_impl2");
-        assertEquals(table2, mapperFactory.createMapping(SimpleEntityImpl2.class).getTableAccess().getTableScheme());
+        var m3 = mapperFactory.createMapping(SimpleEntityImpl2.class, m2);
+        assertEquals(table2, m3.getTableAccess().getTableScheme());
 
-        assertEquals(table2, mapperFactory.createMapping(m, SimpleEntityImpl2.class).getTableAccess().getTableScheme());
+//        assertEquals(table2, m3.getTableAccess().getTableScheme());
     }
 }
 

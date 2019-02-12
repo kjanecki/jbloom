@@ -1,5 +1,6 @@
 package com.agh.jbloom.components.mapping.factories;
 
+import com.agh.jbloom.components.mapping.mappers.ClassTableMapper;
 import com.agh.jbloom.components.mapping.model.Key;
 import com.agh.jbloom.components.mapping.model.TableAccessBuilder;
 import com.agh.jbloom.components.mapping.mappers.BaseInheritanceMapper;
@@ -14,41 +15,36 @@ public class ClassTableMapperFactory implements MapperFactory {
     }
 
     @Override
-    public BaseInheritanceMapper createMapping(BaseInheritanceMapper handler, Class c) {
-        BaseInheritanceMapper newHandler = createMapping(c, handler.getSubject());
-        newHandler.setParent(handler);
-        return newHandler;
+    public BaseInheritanceMapper createMapping(Class c, BaseInheritanceMapper parent) throws IllegalAccessException {
+        if(!c.getSuperclass().equals(parent.getSubject()))
+            throw new IllegalAccessException("Subject of BaseInheritanceMapper has to be a superclass of second argument");
+
+        String tableName = getTableName(c);
+        TableAccess parentMapper = parent.getTableAccess();
+        Key parentPrimaryKey = parentMapper.getPrimaryKey();
+        String references = parentMapper.getTableScheme().getName()+"("+parentPrimaryKey.getColumnScheme().getName()+")";
+        Key childPrimaryKey = new Key(parentPrimaryKey.getColumnScheme(), parentPrimaryKey.getFieldAccess(), references);
+
+        handlerBuilder
+                .withName(getTableName(c))
+                .withSubjectClass(c)
+                .withClass(c)
+                .withPrimaryKey(childPrimaryKey)
+                .withForeignKey(childPrimaryKey);
+
+        return new ClassTableMapper(c, handlerBuilder.build(), parent);
     }
 
 
     @Override
-    public BaseInheritanceMapper createMapping(Class c, Class stop) {
-        if (c.equals(stop)){
-            return null;
-        }else{
-            BaseInheritanceMapper parent = createMapping(c.getSuperclass(), stop);
+    public BaseInheritanceMapper createMapping(Class c) {
 
-            String tableName = getTableName(c);
-            handlerBuilder.withSubjectClass(c).withName(tableName);
-            TableAccess mapper;
+        String tableName = getTableName(c);
+        handlerBuilder
+                .withName(getTableName(c))
+                .withSubjectClass(c)
+                .withClass(c);
 
-            handlerBuilder
-                    .withName(getTableName(c))
-                    .withSubjectClass(c)
-                    .withClass(c);
-
-            if (parent == null){
-                return new BaseInheritanceMapper(c, handlerBuilder.build());
-            }
-            else {
-                TableAccess parentMapper = parent.getTableAccess();
-                Key parentPrimaryKey = parentMapper.getPrimaryKey();
-                String references = parentMapper.getTableScheme().getName()+"("+parentPrimaryKey.getColumnScheme().getName()+")";
-                Key childPrimaryKey = new Key(parentPrimaryKey.getColumnScheme(), parentPrimaryKey.getFieldAccess(), references);
-                handlerBuilder.withPrimaryKey(childPrimaryKey);
-                handlerBuilder.withForeignKey(childPrimaryKey);
-                return new BaseInheritanceMapper(c, parent, handlerBuilder.build());
-            }
-        }
+        return new ClassTableMapper(c, handlerBuilder.build());
     }
 }
