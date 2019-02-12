@@ -16,8 +16,7 @@ public class KeyGenerator {
         this.keyColumnName=keyColumnName;
         this.classCloumnName=classCloumnName;
     }
-
-    public IdentityField getNewKey(Class subject) throws SQLException {
+    private Long getIdFromDB(Class subject) throws SQLException, NoIdException {
         Connection connection=connectionPool.acquireConnection();
         String className=subject.getName();
         StringBuilder quarry = new StringBuilder();
@@ -33,44 +32,51 @@ public class KeyGenerator {
 
         Statement statement=connection.createStatement();
         ResultSet existResult=statement.executeQuery(quarry.toString());
-
-        if(!existResult.next()){
-            //This class isn't in table
-            quarry.setLength(0);
-            quarry.append("Select max(").append(keyColumnName).append(") ");
-            quarry.append("from ").append(classesTable).append(";");
-            statement=connection.createStatement();
-            ResultSet resultSet=statement.executeQuery(quarry.toString());
-            Long id;
-            if(!resultSet.next()){
-                //There are no entries in table
-                id=0L;
-            }
-            else {
-                //Other way get max id+1
-                id=resultSet.getLong(1)+1;
-            }
-            //Update table with new class
-            quarry.setLength(0);
-            quarry.append("Insert Into ").append(classesTable);
-            quarry.append("(").append(classCloumnName).append(", ").append(keyColumnName);
-            quarry.append(" Values( ").append(className).append(", ").append(id).append(");");
-            statement=connection.createStatement();
-            statement.executeQuery(quarry.toString());
-            return new IdentityField(subject,id);
-
-
-        }else {
-            Long result_key=existResult.getLong(1);
-            return new IdentityField(subject,result_key);
-
-        }
-
-
+        connectionPool.releaseConnection(connection);
+        if(!existResult.next()) throw new NoIdException();
+        else return existResult.getLong(1);
     }
 
 
+    private void insertKeyIntoDB(Class subject, Long key) throws SQLException {
+        StringBuilder quarry = new StringBuilder();
+        Connection connection=connectionPool.acquireConnection();
+
+        quarry.append("Insert Into ").append(classesTable);
+        quarry.append("(").append(classCloumnName).append(", ").append(keyColumnName);
+        quarry.append(" Values( ").append(subject.getName()).append(", ").append(key).append(");");
+
+        Statement statement=connection.createStatement();
+        statement.executeQuery(quarry.toString());
+        connectionPool.releaseConnection(connection);
+
+    }
+
+    public IdentityField getKey(Class subject) throws SQLException {
 
 
+        try {
+            Long id= getIdFromDB(subject);
+            return new IdentityField(subject,id);
+
+        } catch (NoIdException e) {
+            Connection connection=connectionPool.acquireConnection();
+            StringBuilder quarry=new StringBuilder();
+
+            quarry.append("Select max(").append(keyColumnName).append(") ");
+            quarry.append("from ").append(classesTable).append(";");
+            Statement statement=connection.createStatement();
+            ResultSet resultSet=statement.executeQuery(quarry.toString());
+            connectionPool.releaseConnection(connection);
+            Long id=0L;
+            if(resultSet.next()){
+                id=resultSet.getLong(1)+1;
+            }
+            insertKeyIntoDB(subject,id);
+            return new IdentityField(subject,id);
+        }
+
+    }
+    private class NoIdException extends Exception{ }
 
 }
