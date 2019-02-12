@@ -3,6 +3,7 @@ package com.agh.jbloom.components.mapping.mappers;
 import com.agh.jbloom.components.dataaccess.ConnectionPool;
 import com.agh.jbloom.components.dataaccess.IdentityField;
 import com.agh.jbloom.components.dataaccess.ObjectFieldAccess;
+import com.agh.jbloom.components.mapping.model.TableScheme;
 import com.agh.jbloom.components.query.QueryFactory;
 import com.agh.jbloom.components.query.SelectQueryBuilder;
 import com.agh.jbloom.components.query.Transaction;
@@ -85,5 +86,10 @@ public class ClassTableMapper extends BaseInheritanceMapper{
                 ",\ntableAccess=" + tableAccess +
                 ",\nparent=" + parent +
                 '}';
+    }
+
+    @Override
+    public List<TableScheme> getRelatedTables() {
+        return null;
     }
 }

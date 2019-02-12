@@ -4,45 +4,28 @@ import com.agh.jbloom.components.mapping.mappers.ConcreteTableMapper;
 import com.agh.jbloom.components.mapping.model.TableAccessBuilder;
 import com.agh.jbloom.components.mapping.mappers.BaseInheritanceMapper;
 
-public class ConcreteTableMapperFactory implements MapperFactory {
-
-    private TableAccessBuilder handlerBuilder;
+public class ConcreteTableMapperFactory extends BaseInheritanceMapperFactory {
 
     public ConcreteTableMapperFactory(TableAccessBuilder handlerBuilder) {
-        this.handlerBuilder = handlerBuilder;
+        super(handlerBuilder);
     }
 
     @Override
-    public BaseInheritanceMapper createMapping(Class c, BaseInheritanceMapper parent) throws IllegalAccessException {
+    public BaseInheritanceMapper createMapping(Class c, BaseInheritanceMapper parent) throws InvalidArgumentException {
         if(!c.getSuperclass().equals(parent.getSubject()))
-            throw new IllegalAccessException("Subject of BaseInheritanceMapper has to be a superclass of second argument");
+            throw new InvalidArgumentException("Subject of BaseInheritanceMapper has to be a superclass of second argument");
 
-        String tableName = getTableName(c);
-        handlerBuilder.withSubjectClass(c)
-                .withName(tableName)
-                .withClass(c)
-                .withPrimaryKey(parent.getTableAccess().getPrimaryKey());
+        buildClassTableAccess(c);
+        handlerBuilder.withPrimaryKey(parent.getTableAccess().getPrimaryKey());
 
         return new ConcreteTableMapper(c, handlerBuilder.build(), parent);
     }
 
     @Override
-    public BaseInheritanceMapper createMapping(Class c) throws IllegalAccessException {
+    public BaseInheritanceMapper createMapping(Class c) throws InvalidArgumentException {
         if(!c.getSuperclass().equals(Object.class))
-            throw new IllegalAccessException("Subject of BaseInheritanceMapper has to be a superclass of second argument");
-
-
-        String tableName = getTableName(c);
-        handlerBuilder.withSubjectClass(c)
-                .withName(tableName)
-                .withClass(c);
-
+            throw new InvalidArgumentException("Subject of BaseInheritanceMapper has to be a superclass of second argument");
+        buildClassTableAccess(c);
         return new ConcreteTableMapper(c, handlerBuilder.build());
-
-//        Class current = c;
-//        do{
-//            handlerBuilder.withClass(current);
-//        }while ((current = current.getSuperclass()) != parent);
-//        return new BaseInheritanceMapper(c, handlerBuilder.build());
     }
 }

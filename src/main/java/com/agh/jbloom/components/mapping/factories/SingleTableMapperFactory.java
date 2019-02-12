@@ -3,11 +3,14 @@ package com.agh.jbloom.components.mapping.factories;
 import com.agh.jbloom.components.mapping.mappers.BaseInheritanceMapper;
 import com.agh.jbloom.components.mapping.model.TableAccessBuilder;
 import com.agh.jbloom.components.mapping.mappers.SingleTableMapper;
-public class SingleTableMapperFactory implements MapperFactory {
-    private TableAccessBuilder handlerBuilder;
+public class SingleTableMapperFactory extends BaseInheritanceMapperFactory {
+
+    public SingleTableMapperFactory(TableAccessBuilder handlerBuilder) {
+        super(handlerBuilder);
+    }
 
     @Override
-    public BaseInheritanceMapper createMapping(Class c, BaseInheritanceMapper parent) throws IllegalAccessException {
+    public BaseInheritanceMapper createMapping(Class c, BaseInheritanceMapper parent) throws InvalidArgumentException {
         //TODO maybe check if paren is really parrent
         handlerBuilder.clear();
         handlerBuilder.withName(c.getName()).withSubjectClass(c).withClass(c);
