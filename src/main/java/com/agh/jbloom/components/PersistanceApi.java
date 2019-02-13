@@ -1,6 +1,7 @@
 package com.agh.jbloom.components;
 
 import com.agh.jbloom.annotations.MappingType;
+import com.agh.jbloom.annotations.Table;
 import com.agh.jbloom.components.dataaccess.ConnectionObserver;
 import com.agh.jbloom.components.dataaccess.ConnectionPool;
 import com.agh.jbloom.components.dataaccess.IdentityField;
@@ -9,12 +10,16 @@ import com.agh.jbloom.components.mapping.CohesionAnalyzer;
 import com.agh.jbloom.components.mapping.DatabaseScheme;
 import com.agh.jbloom.components.mapping.MappingDirector;
 import com.agh.jbloom.components.mapping.factories.MapperFactory;
+import com.agh.jbloom.components.query.FastTesting;
 import com.agh.jbloom.components.query.QueryFactory;
 import com.agh.jbloom.components.query.SqlQuery;
 import com.agh.jbloom.components.query.concretequeryfactory.DeleteQueryFactory;
 import com.agh.jbloom.components.query.concretequeryfactory.InsertQueryFactory;
 import com.agh.jbloom.components.query.concretequeryfactory.UpdateQueryFactory;
 
+import javax.annotation.Resource;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -40,7 +45,7 @@ public class PersistanceApi {
         mappingDirector.setDatabaseScheme(databaseScheme);
     }
 
-    public void insert(Object o) throws SQLException {
+    public void insert(Object o) throws SQLException, IllegalAccessException {
 
         Connection connection = connectionPool.acquireConnection();
 
@@ -53,7 +58,8 @@ public class PersistanceApi {
         }else {
 
             // it is not mapped, so we are mapping and then we add it
-            //mappingDirector.createMapping(o.getClass(), o.getClass().getAnnotationsByType());
+
+            mappingDirector.createMapping(o.getClass(), getMappingType(o.getClass()));
 
         }
 
@@ -107,6 +113,14 @@ public class PersistanceApi {
 
         return null;
     }
+
+    private String getMappingType(Class c){
+        Annotation a = c.getAnnotation(MappingType.class);
+        return ((MappingType) a).name();
+    }
+
+
+
 
 
 }
