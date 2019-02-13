@@ -5,7 +5,7 @@ import com.agh.jbloom.annotations.Id;
 import com.agh.jbloom.annotations.Table;
 
 @Entity
-@Table(name = "simple_entity")
+@Table(name = "my_simple_entity")
 public class SimpleEntity{
 
     @Id

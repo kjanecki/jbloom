@@ -21,7 +21,9 @@ public class UpdateQuery extends SqlQuery {
             query.append(column.getName())
                     .append('=');
             try {
-                query.append(getTableAccess().getObjectFieldAccess().getField(column.getName(),getObject()));
+                query.append("'")
+                        .append(getTableAccess().getObjectFieldAccess().getField(column.getName(),getObject()))
+                        .append("'");
             } catch (InvocationTargetException | IllegalAccessException e) {
                 e.printStackTrace();
             }
@@ -38,7 +40,9 @@ public class UpdateQuery extends SqlQuery {
         try {
             query.append(primary_key)
                     .append('=')
-                    .append(getTableAccess().getObjectFieldAccess().getField(primary_key, getObject()));
+                    .append("'")
+                    .append(getTableAccess().getObjectFieldAccess().getField(primary_key, getObject()))
+                    .append("'");
         } catch (InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
         }

@@ -1,15 +1,15 @@
 package com.agh.jbloom.components.mapping.model;
 
 import com.agh.jbloom.annotations.Id;
+import com.agh.jbloom.annotations.OneToMany;
 import com.agh.jbloom.components.dataaccess.ObjectFieldAccess;
 import com.agh.jbloom.components.mapping.mappers.TableAccess;
 import com.agh.jbloom.components.query.SqlTypeConverter;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.ParameterizedType;
+import java.util.*;
 
 public class SimpleTableAccessBuilder implements TableAccessBuilder {
 
@@ -20,6 +20,9 @@ public class SimpleTableAccessBuilder implements TableAccessBuilder {
     private String tableName;
     private SqlTypeConverter typeConverter;
     private Class subject;
+    private Map<String, String> relatedClasses;
+    private String mapingName="Auto";
+
 
     public SimpleTableAccessBuilder(SqlTypeConverter typeConverter) {
         this.typeConverter = typeConverter;
@@ -33,6 +36,7 @@ public class SimpleTableAccessBuilder implements TableAccessBuilder {
         foreignKeys = new ArrayList<>();
         tableName = "";
         subject = null;
+        relatedClasses = new HashMap<>();
     }
 
     @Override
@@ -58,14 +62,23 @@ public class SimpleTableAccessBuilder implements TableAccessBuilder {
             String fieldName = f.getName();
             ColumnScheme newColumn = new ColumnScheme(f, typeConverter);
 
-            columnSchemeMap.put(fieldName, newColumn);
             Method getter, setter;
-
-            if((getter = methods.get(objectFieldAccess.generateGetterName(fieldName))) != null)
+            if((getter = methods.get(objectFieldAccess.generateGetterName(fieldName))) != null) {
                 objectFieldAccess.addGetter(fieldName,getter);
+            }
 
-            if((setter = methods.get(objectFieldAccess.generateSetterName(fieldName))) != null)
+            if((setter = methods.get(objectFieldAccess.generateSetterName(fieldName))) != null) {
                 objectFieldAccess.addSetter(fieldName,setter);
+            }
+
+            if(f.isAnnotationPresent(OneToMany.class)){
+                var typename = ((ParameterizedType)f.getGenericType()).getActualTypeArguments()[0].getTypeName().toString();
+                withRelatedClass(typename,"OneToMany");
+                continue;
+            }
+
+            columnSchemeMap.put(fieldName, newColumn);
+
 
             if(f.isAnnotationPresent(Id.class))
                 generateKey(newColumn, getter, setter);
@@ -96,11 +109,16 @@ public class SimpleTableAccessBuilder implements TableAccessBuilder {
         return this;
     }
 
+    public TableAccessBuilder withRelatedClass(String classname, String relation){
+        relatedClasses.put(classname,relation);
+        return this;
+    }
+
     @Override
     public TableAccess build(){
         TableAccess mapper;
         TableScheme tableScheme = new TableScheme(columnSchemeMap, tableName);
-        mapper = new TableAccess("ConcreteTable", tableScheme, objectFieldAccess, primaryKey, foreignKeys);
+        mapper = new TableAccess(mapingName, tableScheme, objectFieldAccess, primaryKey, foreignKeys, relatedClasses);
         clear();
         return mapper;
     }
@@ -110,5 +128,12 @@ public class SimpleTableAccessBuilder implements TableAccessBuilder {
         ColumnScheme columnScheme=new ColumnScheme(columnName,tye,isNullable);
         columnSchemeMap.put(columnName,columnScheme);
         return this;
+    }
+
+
+    @Override
+    public TableAccessBuilder withMapingName(String name) {
+         this.mapingName=name;
+         return this;
     }
 }

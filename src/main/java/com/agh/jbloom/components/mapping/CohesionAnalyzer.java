@@ -12,11 +12,9 @@ import java.sql.*;
 public class CohesionAnalyzer {
 
     private ConnectionPool connectionPool;
-    private DatabaseScheme databaseScheme;
 
-    public CohesionAnalyzer(ConnectionPool connectionPool, DatabaseScheme databaseScheme) {
+    public CohesionAnalyzer(ConnectionPool connectionPool) {
         this.connectionPool = connectionPool;
-        this.databaseScheme = databaseScheme;
     }
 
     public void createTable(TableAccess mapper) throws SQLException {

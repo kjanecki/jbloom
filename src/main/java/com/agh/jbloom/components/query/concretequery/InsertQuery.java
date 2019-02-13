@@ -37,7 +37,10 @@ public class InsertQuery extends SqlQuery {
 
                 query.append("'").append(value).append("'");
 
-            } catch (InvocationTargetException | IllegalAccessException e) {
+            } catch (IllegalAccessException e) {
+                query.append("Null ");
+
+            }catch (InvocationTargetException e){
                 e.printStackTrace();
             }
 

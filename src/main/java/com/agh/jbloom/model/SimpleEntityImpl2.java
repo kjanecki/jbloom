@@ -4,7 +4,7 @@ import com.agh.jbloom.annotations.Entity;
 import com.agh.jbloom.annotations.Table;
 
 @Entity
-@Table(name = "simple_entity_impl2")
+@Table(name = "my_simple_entity_impl2")
 public class SimpleEntityImpl2 extends SimpleEntityImpl{
 
     private String local_param;

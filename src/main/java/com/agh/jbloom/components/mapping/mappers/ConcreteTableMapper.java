@@ -28,6 +28,7 @@ public class ConcreteTableMapper extends BaseInheritanceMapper {
 
     @Override
     public void buildTransaction(Transaction transaction, Object o, QueryFactory factory) throws SQLException {
+
         transaction.addQuery(factory.createQuery(tableAccess, o).toString());
     }
 
@@ -68,8 +69,8 @@ public class ConcreteTableMapper extends BaseInheritanceMapper {
         return o;
     }
 
-    public <T> Collection findRelatedObjects(){
-
-        return null;
+    @Override
+    public TableAccess getRelatedTableAccess() {
+        return tableAccess;
     }
 }

@@ -1,7 +1,6 @@
 package com.agh.jbloom.components;
 
 import com.agh.jbloom.annotations.MappingType;
-import com.agh.jbloom.annotations.Table;
 import com.agh.jbloom.components.dataaccess.ConnectionObserver;
 import com.agh.jbloom.components.dataaccess.ConnectionPool;
 import com.agh.jbloom.components.dataaccess.IdentityField;
@@ -10,16 +9,13 @@ import com.agh.jbloom.components.mapping.CohesionAnalyzer;
 import com.agh.jbloom.components.mapping.DatabaseScheme;
 import com.agh.jbloom.components.mapping.MappingDirector;
 import com.agh.jbloom.components.mapping.factories.MapperFactory;
-import com.agh.jbloom.components.query.FastTesting;
 import com.agh.jbloom.components.query.QueryFactory;
 import com.agh.jbloom.components.query.SqlQuery;
 import com.agh.jbloom.components.query.concretequeryfactory.DeleteQueryFactory;
 import com.agh.jbloom.components.query.concretequeryfactory.InsertQueryFactory;
 import com.agh.jbloom.components.query.concretequeryfactory.UpdateQueryFactory;
 
-import javax.annotation.Resource;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -41,7 +37,7 @@ public class PersistanceApi {
         this.connectionPool = connectionPool;
 
         databaseScheme = new DatabaseScheme();
-        mappingDirector = new MappingDirector(new CohesionAnalyzer(connectionPool, databaseScheme));
+        mappingDirector = new MappingDirector(new CohesionAnalyzer(connectionPool), databaseScheme);
         mappingDirector.setDatabaseScheme(databaseScheme);
     }
 
@@ -69,7 +65,7 @@ public class PersistanceApi {
 
             mappingDirector.createMapping(o.getClass(), getMappingType(o.getClass()));
 
-        }
+    }
 
 
 
