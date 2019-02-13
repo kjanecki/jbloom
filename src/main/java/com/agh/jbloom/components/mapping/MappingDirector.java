@@ -18,7 +18,6 @@ public class MappingDirector {
     public void createMapping(Class clas) throws IllegalAccessException {
 
         // need know which mapping create
-
         MapperFactory service = new ClassTableMapperFactory(new SimpleTableAccessBuilder(new BaseSqlTypeConverter()));
 
         BaseInheritanceMapper mapper = service.createMapping(clas);

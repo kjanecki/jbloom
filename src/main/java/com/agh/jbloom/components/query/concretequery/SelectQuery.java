@@ -1,7 +1,10 @@
 package com.agh.jbloom.components.query.concretequery;
 
 import com.agh.jbloom.components.mapping.mappers.TableAccess;
+import com.agh.jbloom.components.mapping.model.Key;
 import com.agh.jbloom.components.query.SqlQuery;
+
+import java.util.List;
 
 public class SelectQuery extends SqlQuery {
     public SelectQuery(TableAccess tableAccess, Object object) {
@@ -13,6 +16,17 @@ public class SelectQuery extends SqlQuery {
         StringBuilder queryString = new StringBuilder("SELECT * FROM ");
 
         queryString.append(getTableAccess().getTableScheme().getName());
+
+
+        //getTableAccess().getObjectFieldAccess().getField(column.getName(), getObject());
+
+
+
+        List<Key> foreignKeys = getTableAccess().getForeignKeys();
+        for(Key foreginKey: foreignKeys){
+
+
+        }
 
         queryString.append(" WHERE ");
 
