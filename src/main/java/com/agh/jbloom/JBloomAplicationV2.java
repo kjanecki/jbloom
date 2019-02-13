@@ -2,6 +2,7 @@ package com.agh.jbloom;
 
 
 import com.agh.jbloom.components.dataaccess.ConnectionPool;
+import com.agh.jbloom.components.exceptions.DeletedFieldOfClassException;
 import com.agh.jbloom.components.mapping.CohesionAnalyzer;
 import com.agh.jbloom.components.mapping.DatabaseScheme;
 import com.agh.jbloom.components.mapping.factories.ConcreteTableMapperFactory;
@@ -18,11 +19,11 @@ import java.sql.SQLException;
 
 @SpringBootApplication
 public class JBloomAplicationV2 {
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws SQLException, DeletedFieldOfClassException {
         ApplicationContext ctx = new AnnotationConfigApplicationContext(AppConfig.class);
 
 
-        CohesionAnalyzer cohesionAnalyzer = new CohesionAnalyzer(ctx.getBean(ConnectionPool.class), new DatabaseScheme());
+        CohesionAnalyzer cohesionAnalyzer = new CohesionAnalyzer(ctx.getBean(ConnectionPool.class));
 
         MapperFactory mapperFactory = new ConcreteTableMapperFactory(new SimpleTableAccessBuilder(new BaseSqlTypeConverter()));
 

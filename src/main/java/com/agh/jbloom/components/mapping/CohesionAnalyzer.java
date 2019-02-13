@@ -2,12 +2,14 @@ package com.agh.jbloom.components.mapping;
 
 import com.agh.jbloom.components.dataaccess.ConnectionPool;
 import com.agh.jbloom.components.dataaccess.DataSource;
+import com.agh.jbloom.components.exceptions.DeletedFieldOfClassException;
 import com.agh.jbloom.components.mapping.mappers.BaseInheritanceMapper;
 import com.agh.jbloom.components.mapping.mappers.ConcreteTableMapper;
 import com.agh.jbloom.components.mapping.mappers.TableAccess;
 import com.agh.jbloom.components.mapping.model.TableScheme;
 
 import java.sql.*;
+import java.util.Set;
 
 public class CohesionAnalyzer {
 
@@ -65,7 +67,7 @@ public class CohesionAnalyzer {
     }
 
 
-    public void checkCohesion(TableAccess mapper) throws SQLException {
+    public void checkCohesion(TableAccess mapper) throws SQLException, DeletedFieldOfClassException {
 
         Connection connection = connectionPool.acquireConnection();
 
@@ -96,13 +98,23 @@ public class CohesionAnalyzer {
 
                 if ( table_name.equals(mapper.getTableScheme().getName())){
 
+
                     // Its in DB so now we check if it is in cohesion of columns with DB table
                     Statement st = connection.createStatement();
                     ResultSet columns = st.executeQuery("SELECT * FROM " + table_name);
                     ResultSetMetaData columnsMetaData = columns.getMetaData();
                     int columnsCount = columnsMetaData.getColumnCount();
-                    System.out.println(columnsCount);
 
+                    int schemeColumnCount = mapper.getTableScheme().getColumnMap().keySet().size();
+
+                    if (columnsCount > schemeColumnCount){
+                        // It means that user deleted som field in class
+                        // So we make old column null by default
+                        String deletedFiled = makeOldColumnNull(mapper.getTableScheme().getColumnMap().keySet(), columnsMetaData, table_name);
+                        throw new DeletedFieldOfClassException("You have deleted field: " + deletedFiled);
+                    }
+
+                    // ELSE
                     // loop through all columns
                     for(var mapperColumn : mapper.getTableScheme().getColumnMap().keySet()){
 
@@ -122,8 +134,8 @@ public class CohesionAnalyzer {
                             //need to add it to DB
                             System.out.println("we need to add column: " + mapperColumn);
 
-                            //TODO need to add alter query, cant use executeQuery
-                            st.executeUpdate("alter table " + table_name + " add " + mapperColumn + " varchar(255)");
+                            //TODO need to add alter query, cant use executeQuery (its null by default)
+                            st.executeUpdate("alter table " + table_name + " add " + mapperColumn + " varchar(255) default NULL" );
                         }
                     }
 
@@ -151,6 +163,24 @@ public class CohesionAnalyzer {
 
         // 5. jezeli zmiana typy columny -> wyjatek
 
+    }
+
+    private String makeOldColumnNull(Set<String> schemeColumns, ResultSetMetaData columnsMetaData, String table_name) throws SQLException {
+
+        String oldColumn = "";
+        for (int i=1; i < columnsMetaData.getColumnCount() + 1; ++i){
+
+            if (schemeColumns.contains(columnsMetaData.getColumnName(i))){
+                oldColumn = columnsMetaData.getColumnName(i);
+                break;
+            }
+        }
+
+        Connection conn = connectionPool.acquireConnection();
+        Statement stm = conn.createStatement();
+        stm.executeUpdate( "alter table"  + table_name + " add " +  oldColumn + " varchar(255) default null");
+
+        return oldColumn;
     }
 
 }
