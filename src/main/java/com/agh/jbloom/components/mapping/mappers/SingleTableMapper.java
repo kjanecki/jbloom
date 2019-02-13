@@ -43,7 +43,7 @@ public class SingleTableMapper extends BaseInheritanceMapper {
     public Object find(IdentityField id, ConnectionPool connectionPool, QueryFactory factory) throws SQLException {
         return null;
     }
-    
+
     @Override
     public TableAccess getRelatedTableAccess() {
         return tableAccess;
