@@ -7,14 +7,20 @@ import com.agh.jbloom.components.mapping.mappers.BaseInheritanceMapper;
 import com.agh.jbloom.components.mapping.model.SimpleTableAccessBuilder;
 import com.agh.jbloom.components.query.BaseSqlTypeConverter;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 public class MappingDirector {
 
+    private CohesionAnalyzer cohesionAnalyzer;
 
-    public void createMapping(Class clas, String mappingType) throws IllegalAccessException {
+    public MappingDirector(CohesionAnalyzer cohesionAnalyzer) {
+        this.cohesionAnalyzer = cohesionAnalyzer;
+    }
+
+    public void createMapping(Class clas, String mappingType) throws IllegalAccessException, SQLException {
 
         // Get all superclasses and class
         List<Class> allClasses = new ArrayList<>();
@@ -31,7 +37,7 @@ public class MappingDirector {
 
 
         // need know which mapping create
-        MapperFactory mapperFactory = new SingleTableMapperFactory(new SimpleTableAccessBuilder(new BaseSqlTypeConverter()));
+        MapperFactory mapperFactory;
 
         List<BaseInheritanceMapper> mappers;
 
@@ -39,7 +45,6 @@ public class MappingDirector {
         switch (mappingType) {
 
             case "SINGLE_TABLE":
-                System.out.println(allClasses);
                 mapperFactory = new SingleTableMapperFactory(new SimpleTableAccessBuilder(new BaseSqlTypeConverter()));
 
                 mappers = new ArrayList<>();
@@ -49,39 +54,31 @@ public class MappingDirector {
                     mappers.add(mapperFactory.createMapping(allClasses.get(i), mappers.get(mappers.size() - 1)));
                 }
 
-                //
+                //TODO rethink it (A,B,C) -> what if we add D (A,B,C,D) we have to create new table (A,B,C,D) ??
                 concreteMapper = mappers.get(mappers.size() - 1);
 
-                System.out.println(concreteMapper);
-
-                System.out.println("DSDASDSADs");
+                cohesionAnalyzer.checkCohesion(concreteMapper.getTableAccess());
 
                 break;
 
             case "CONCRETE_TABLE":
-
-                System.out.println(allClasses);
 
                 mapperFactory = new ConcreteTableMapperFactory(new SimpleTableAccessBuilder(new BaseSqlTypeConverter()));
 
                 mappers = new ArrayList<>();
                 mappers.add(mapperFactory.createMapping(allClasses.get(allClasses.size() - 1)));
 
-
-
                 for (int i = allClasses.size() - 2; i >= 0; --i) {
                     mappers.add(mapperFactory.createMapping(allClasses.get(i), mappers.get(mappers.size() - 1)));
                 }
 
-                //
-                concreteMapper = mappers.get(mappers.size() - 1);
+                for (var mapper: mappers){
+                    cohesionAnalyzer.checkCohesion(mapper.getTableAccess());
+                }
 
-                System.out.println(concreteMapper);
                 break;
 
             case "CLASS_TABLE":
-
-                System.out.println(allClasses);
 
                 mapperFactory = new ClassTableMapperFactory(new SimpleTableAccessBuilder(new BaseSqlTypeConverter()));
 
@@ -92,11 +89,9 @@ public class MappingDirector {
                     mappers.add(mapperFactory.createMapping(allClasses.get(i), mappers.get(mappers.size() - 1)));
                 }
 
-                //
-                concreteMapper = mappers.get(mappers.size() - 1);
-
-                System.out.println(concreteMapper);
-
+                for (var mapper: mappers){
+                    cohesionAnalyzer.checkCohesion(mapper.getTableAccess());
+                }
 
                 break;
         }
@@ -106,10 +101,10 @@ public class MappingDirector {
 
 
 
-    public static void main(String[] args) throws IllegalAccessException {
-        MappingDirector d = new MappingDirector();
-
-        d.createMapping(Dupa.class, "SINGLE_TABLE");
+    public static void main(String[] args) throws IllegalAccessException, SQLException {
+//        MappingDirector d = new MappingDirector();
+//
+//        d.createMapping(Dupa.class, "CLASS_TABLE");
     }
 
 
@@ -144,6 +139,7 @@ public class MappingDirector {
     }
 
     static public class a extends b{
+        @Id
         private String aa="AA";
 
         public String getAa() {
@@ -156,6 +152,7 @@ public class MappingDirector {
     }
 
     static public class b{
+
         private String bb="BB";
 
         public String getBb() {

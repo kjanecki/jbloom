@@ -125,7 +125,7 @@ public class CohesionAnalyzer {
 
                         if (!columnIsInDB){
                             //need to add it to DB
-                            System.out.println("we need to add: " + mapperColumn);
+                            System.out.println("we need to add column: " + mapperColumn);
 
                             //TODO need to add alter query, cant use executeQuery
                             //st.executeQuery("alter table " + table_name + " add " + mapperColumn + " varchar(255)");

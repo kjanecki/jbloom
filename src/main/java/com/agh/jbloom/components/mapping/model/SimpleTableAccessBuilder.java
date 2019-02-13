@@ -104,4 +104,11 @@ public class SimpleTableAccessBuilder implements TableAccessBuilder {
         clear();
         return mapper;
     }
+
+    @Override
+    public TableAccessBuilder withColumn(String columnName,String tye,boolean isNullable) {
+        ColumnScheme columnScheme=new ColumnScheme(columnName,tye,isNullable);
+        columnSchemeMap.put(columnName,columnScheme);
+        return this;
+    }
 }
