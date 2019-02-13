@@ -7,26 +7,34 @@ import com.agh.jbloom.components.query.QueryFactory;
 import com.agh.jbloom.components.query.Transaction;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SingleTableMapper extends BaseInheritanceMapper {
     private TableAccess localTableAccess;
+    private ArrayList<TableScheme> relatedTables;
 
 
     public SingleTableMapper(Class subject, TableAccess tableAccess)
     {
         super(subject, tableAccess);
         localTableAccess =tableAccess.getIndependentCopy();
+        relatedTables=new ArrayList<>();
     }
 
     public SingleTableMapper(Class subject, TableAccess dbAccessTable, TableAccess localAccessTable)
     {
         super(subject, dbAccessTable);
         localTableAccess =localAccessTable;
+        relatedTables=new ArrayList<>();
     }
 
     public TableAccess getLocalTableAccess() {
         return localTableAccess;
+    }
+
+    void addRelatedTable(TableScheme tableScheme){
+        relatedTables.add(tableScheme);
     }
 
     @Override
@@ -36,7 +44,7 @@ public class SingleTableMapper extends BaseInheritanceMapper {
 
     @Override
     public List<TableScheme> getRelatedTables() {
-        return null;
+        return relatedTables;
     }
 
     @Override
