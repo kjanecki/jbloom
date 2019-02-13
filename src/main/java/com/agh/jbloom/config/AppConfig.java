@@ -3,6 +3,7 @@ package com.agh.jbloom.config;
 import com.agh.jbloom.components.dataaccess.ConnectionPool;
 import com.agh.jbloom.components.dataaccess.DataSource;
 import com.agh.jbloom.components.mapping.CohesionAnalyzer;
+import com.agh.jbloom.components.mapping.DatabaseScheme;
 import com.agh.jbloom.model.EntityExample;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -44,7 +45,12 @@ public class AppConfig {
     }
 
     @Bean
+    public DatabaseScheme databaseScheme() {
+        return new DatabaseScheme();
+    }
+
+    @Bean
     public CohesionAnalyzer cohesionAnalyzer(){
-        return new CohesionAnalyzer(connectionPool());
+        return new CohesionAnalyzer(connectionPool(), databaseScheme());
     }
 }

@@ -7,50 +7,35 @@ import com.agh.jbloom.components.query.QueryFactory;
 import com.agh.jbloom.components.query.Transaction;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class SingleTableMapper extends BaseInheritanceMapper {
-    private TableAccess localTableAccess;
-    private ArrayList<TableScheme> relatedTables;
+    private TableAccess DBTableAccess;
 
 
     public SingleTableMapper(Class subject, TableAccess tableAccess)
     {
         super(subject, tableAccess);
-        localTableAccess =tableAccess.getIndependentCopy();
-        relatedTables=new ArrayList<>();
+        DBTableAccess =tableAccess.getIndependentCopy();
     }
 
-    public SingleTableMapper(Class subject, TableAccess dbAccessTable, TableAccess localAccessTable)
+    public SingleTableMapper(Class subject, TableAccess tableAccess, TableAccess dbAccesTable)
     {
-        super(subject, dbAccessTable);
-        localTableAccess =localAccessTable;
-        relatedTables=new ArrayList<>();
+        super(subject, tableAccess);
+        DBTableAccess =dbAccesTable;
     }
 
-    public TableAccess getLocalTableAccess() {
-        return localTableAccess;
-    }
-
-    void addRelatedTable(TableScheme tableScheme){
-        relatedTables.add(tableScheme);
-    }
-
-    @Override
-    public TableAccess getTableAccess() {
-        return super.getTableAccess();
+    public TableAccess getDBTableAccess() {
+        return DBTableAccess;
     }
 
     @Override
     public List<TableScheme> getRelatedTables() {
-        return relatedTables;
+        return null;
     }
 
     @Override
     public void buildTransaction(Transaction transaction, Object o, QueryFactory factory) throws SQLException {
-        transaction.addQuery(factory.createQuery(super.tableAccess,o).toString());
-
 
     }
 

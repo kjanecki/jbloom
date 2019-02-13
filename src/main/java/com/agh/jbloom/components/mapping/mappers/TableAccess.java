@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class TableAccess{
+public class TableAccess {
 
     private String mappingType;
     private TableScheme tableScheme;
@@ -28,8 +28,6 @@ public class TableAccess{
         this.foreignKeys = foreignKeys;
         this.relatedClasses = relatedClasses;
     }
-
-
 
     public TableAccess(String mappingType, TableScheme tableScheme, ObjectFieldAccess objectFieldAccess, Key primaryKey, List<Key> foreignKeys) {
         this.mappingType = mappingType;
@@ -91,8 +89,6 @@ public class TableAccess{
     public int hashCode() {
         return Objects.hash(mappingType, getTableScheme(), objectFieldAccess, primaryKey, foreignKeys);
     }
-
-
 
     @Override
     public String toString() {

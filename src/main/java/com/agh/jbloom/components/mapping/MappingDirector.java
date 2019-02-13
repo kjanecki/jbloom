@@ -2,34 +2,32 @@ package com.agh.jbloom.components.mapping;
 
 import com.agh.jbloom.annotations.Id;
 import com.agh.jbloom.components.dataaccess.ObjectFieldAccess;
-import com.agh.jbloom.components.mapping.factories.ClassTableMapperFactory;
-import com.agh.jbloom.components.mapping.factories.MapperFactory;
+import com.agh.jbloom.components.mapping.factories.*;
 import com.agh.jbloom.components.mapping.mappers.BaseInheritanceMapper;
 import com.agh.jbloom.components.mapping.model.SimpleTableAccessBuilder;
 import com.agh.jbloom.components.query.BaseSqlTypeConverter;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 public class MappingDirector {
 
+    private CohesionAnalyzer cohesionAnalyzer;
 
-    public void createMapping(Class clas) throws IllegalAccessException {
+    public MappingDirector(CohesionAnalyzer cohesionAnalyzer) {
+        this.cohesionAnalyzer = cohesionAnalyzer;
+    }
 
-        // need know which mapping create
-        MapperFactory service = new ClassTableMapperFactory(new SimpleTableAccessBuilder(new BaseSqlTypeConverter()));
+    public void createMapping(Class clas, String mappingType) throws IllegalAccessException, SQLException {
 
-        BaseInheritanceMapper mapper = service.createMapping(clas);
-
-
-        // Get all superclass and class
+        // Get all superclasses and class
         List<Class> allClasses = new ArrayList<>();
         Class tmp_class = clas;
         while (tmp_class != null) {
 
             allClasses.add(tmp_class);
-
             tmp_class = tmp_class.getSuperclass();
 
         }
@@ -37,75 +35,132 @@ public class MappingDirector {
         // Remove Object class
         allClasses.remove(allClasses.size() - 1);
 
-        List<BaseInheritanceMapper> mappers = new ArrayList<>();
-        mappers.add(service.createMapping(allClasses.get(allClasses.size() - 1)));
 
-        for (int i = allClasses.size() - 2; i >= 0; --i) {
-            mappers.add(service.createMapping(allClasses.get(i), mappers.get(mappers.size() - 1)));
+        // need know which mapping create
+        MapperFactory mapperFactory;
+
+        List<BaseInheritanceMapper> mappers;
+
+        BaseInheritanceMapper concreteMapper;
+        switch (mappingType) {
+
+            case "SINGLE_TABLE":
+                mapperFactory = new SingleTableMapperFactory(new SimpleTableAccessBuilder(new BaseSqlTypeConverter()));
+
+                mappers = new ArrayList<>();
+                mappers.add(mapperFactory.createMapping(allClasses.get(allClasses.size() - 1)));
+
+                for (int i = allClasses.size() - 2; i >= 0; --i) {
+                    mappers.add(mapperFactory.createMapping(allClasses.get(i), mappers.get(mappers.size() - 1)));
+                }
+
+                //TODO rethink it (A,B,C) -> what if we add D (A,B,C,D) we have to create new table (A,B,C,D) ??
+                concreteMapper = mappers.get(mappers.size() - 1);
+
+                cohesionAnalyzer.checkCohesion(concreteMapper.getTableAccess());
+
+                break;
+
+            case "CONCRETE_TABLE":
+
+                mapperFactory = new ConcreteTableMapperFactory(new SimpleTableAccessBuilder(new BaseSqlTypeConverter()));
+
+                mappers = new ArrayList<>();
+                mappers.add(mapperFactory.createMapping(allClasses.get(allClasses.size() - 1)));
+
+                for (int i = allClasses.size() - 2; i >= 0; --i) {
+                    mappers.add(mapperFactory.createMapping(allClasses.get(i), mappers.get(mappers.size() - 1)));
+                }
+
+                for (var mapper: mappers){
+                    cohesionAnalyzer.checkCohesion(mapper.getTableAccess());
+                }
+
+                break;
+
+            case "CLASS_TABLE":
+
+                mapperFactory = new ClassTableMapperFactory(new SimpleTableAccessBuilder(new BaseSqlTypeConverter()));
+
+                mappers = new ArrayList<>();
+                mappers.add(mapperFactory.createMapping(allClasses.get(allClasses.size() - 1)));
+
+                for (int i = allClasses.size() - 2; i >= 0; --i) {
+                    mappers.add(mapperFactory.createMapping(allClasses.get(i), mappers.get(mappers.size() - 1)));
+                }
+
+                for (var mapper: mappers){
+                    cohesionAnalyzer.checkCohesion(mapper.getTableAccess());
+                }
+
+                break;
         }
-
-        //BaseInheritanceMapper concreteMapper = mappers.get(mappers.size() - 1);
 
 
     }
-}
 
 
-//    public static void main(String[] args) throws IllegalAccessException {
+
+    public static void main(String[] args) throws IllegalAccessException, SQLException {
 //        MappingDirector d = new MappingDirector();
 //
-//        d.createMapping(Dupa.class);
-//    }
-//
-//    static public class Dupa extends a {
-//        private String name;
-//
-//        @Id
-//        private int id;
-//
-//        public Dupa(String name, int id) {
-//            this.name = name;
-//            this.id = id;
-//        }
-//
-//        public String getName() {
-//            return name;
-//        }
-//
-//        public int getId() {
-//            return id;
-//        }
-//
-//        public void setName(String name) {
-//            this.name = name;
-//        }
-//
-//        public void setId(int id) {
-//            this.id = id;
-//        }
-//    }
-//
-//    static public class a extends b{
-//        private String aa="AA";
-//
-//        public String getAa() {
-//            return aa;
-//        }
-//
-//        public void setAa(String aa) {
-//            this.aa = aa;
-//        }
-//    }
-//
-//    static public class b{
-//        private String bb="BB";
-//
-//        public String getBb() {
-//            return bb;
-//        }
-//
-//        public void setBb(String bb) {
-//            this.bb = bb;
-//        }
-//    }
-//}
+//        d.createMapping(Dupa.class, "CLASS_TABLE");
+    }
+
+
+
+
+    static public class Dupa extends a {
+        private String name;
+
+        @Id
+        private int id;
+
+        public Dupa(String name, int id) {
+            this.name = name;
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+    }
+
+    static public class a extends b{
+        @Id
+        private String aa="AA";
+
+        public String getAa() {
+            return aa;
+        }
+
+        public void setAa(String aa) {
+            this.aa = aa;
+        }
+    }
+
+    static public class b{
+
+        private String bb="BB";
+
+        public String getBb() {
+            return bb;
+        }
+
+        public void setBb(String bb) {
+            this.bb = bb;
+        }
+    }
+}

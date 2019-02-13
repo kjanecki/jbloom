@@ -12,15 +12,11 @@ import java.sql.*;
 public class CohesionAnalyzer {
 
     private ConnectionPool connectionPool;
+    private DatabaseScheme databaseScheme;
 
-    public CohesionAnalyzer(ConnectionPool connectionPool) {
+    public CohesionAnalyzer(ConnectionPool connectionPool, DatabaseScheme databaseScheme) {
         this.connectionPool = connectionPool;
-    }
-
-    public boolean checkCohesion(TableAccess mapper) throws SQLException {
-        Connection conn = connectionPool.acquireConnection();
-
-        return false;
+        this.databaseScheme = databaseScheme;
     }
 
     public void createTable(TableAccess mapper) throws SQLException {
@@ -71,23 +67,85 @@ public class CohesionAnalyzer {
     }
 
 
-    public boolean chechCohesion(DatabaseScheme databaseScheme, BaseInheritanceMapper mapper) throws SQLException {
+    public void checkCohesion(TableAccess mapper) throws SQLException {
 
         Connection connection = connectionPool.acquireConnection();
 
         DatabaseMetaData metaData = connection.getMetaData();
 
-        ResultSet tables = metaData.getTables(null, null, null, null);
+        ResultSet resultSetTables = metaData.getTables(null, null, "%", null);
 
-
-        while (tables.next()){
-            System.out.println(tables.getString(3)); // 3 stands for table name
+        Statement statement = connection.createStatement();
+        ResultSet tables = statement.executeQuery("select * from information_schema.tables \n" +
+                "where table_schema not in ('information_schema', 'mysql', 'performance_schema')");
+        String first_table_name = "";
+        if ( tables.next() ){
+            first_table_name =tables.getString("TABLE_NAME");
         }
+
+        //TODO change way of getting all users tables to sth different
+        boolean flag = false;
+
+        while (resultSetTables.next()){
+
+            String table_name = resultSetTables.getString("TABLE_NAME");
+
+            if (table_name.equals(first_table_name)) flag = true;
+
+            if(flag){
+
+                System.out.println(table_name + "=" + mapper.getTableScheme().getName());
+
+
+                if ( table_name.equals(mapper.getTableScheme().getName())){
+
+                    System.out.println("It is in DB");
+
+                    // Its in DB so now we check if it is in cohesion of columns with DB table
+                    Statement st = connection.createStatement();
+                    ResultSet columns = st.executeQuery("SELECT * FROM " + table_name);
+                    ResultSetMetaData columnsMetaData = columns.getMetaData();
+                    int columnsCount = columnsMetaData.getColumnCount();
+                    System.out.println(columnsCount);
+
+                    // loop through all columns
+                    for(var mapperColumn : mapper.getTableScheme().getColumnMap().keySet()){
+
+
+                        boolean columnIsInDB = false;
+
+                        for(int i=1; i < columnsCount + 1; ++i) {
+
+
+                            if (mapperColumn.equals(columnsMetaData.getColumnName(i))) {
+                                columnIsInDB = true;
+                                break;
+                            }
+                        }
+
+                        if (!columnIsInDB){
+                            //need to add it to DB
+                            System.out.println("we need to add column: " + mapperColumn);
+
+                            //TODO need to add alter query, cant use executeQuery
+                            //st.executeQuery("alter table " + table_name + " add " + mapperColumn + " varchar(255)");
+                        }
+                    }
+
+                    return;
+                }
+            }
+
+        }
+
+        // It is not in DB so we add it
+        System.out.println("CREATED");
+        createTable(mapper);
 
         // 1. nowy obiekt -> dodajemy go
 
 
-        // 2, jezeli usunelimsy jakis obiekt -> wyjatek ze zniklal jakis obiekt
+        // tego raczej nie ma ->  2, jezeli usunelimsy jakis obiekt -> wyjatek ze zniklal jakis obiekt
 
 
         // 3. jezeli usunelismy columne -> zostawaimy ja w db ustawiamy default na null + wyjatek(co jezeli PK (albo FK))?
@@ -98,10 +156,6 @@ public class CohesionAnalyzer {
 
         // 5. jezeli zmiana typy columny -> wyjatek
 
-        return true;
-    }
-
-    public static void main(String[] args) {
     }
 
 }

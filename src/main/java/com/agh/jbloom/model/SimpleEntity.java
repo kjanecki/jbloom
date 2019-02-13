@@ -13,6 +13,8 @@ public class SimpleEntity{
     protected String name;
     protected String description;
 
+    protected String dupa;
+
     public SimpleEntity() {
     }
 
@@ -44,6 +46,14 @@ public class SimpleEntity{
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getDupa() {
+        return dupa;
+    }
+
+    public void setDupa(String dupa) {
+        this.dupa = dupa;
     }
 }
 
