@@ -1,6 +1,5 @@
 package com.agh.jbloom.components.mapping.factories;
 
-import com.agh.jbloom.annotations.Table;
 import com.agh.jbloom.components.mapping.mappers.BaseInheritanceMapper;
 import com.agh.jbloom.components.mapping.mappers.TableAccess;
 import com.agh.jbloom.components.mapping.model.TableAccessBuilder;
@@ -15,31 +14,29 @@ public class SingleTableMapperFactory extends BaseInheritanceMapperFactory {
     public BaseInheritanceMapper createMapping(Class c, BaseInheritanceMapper parent) throws InvalidArgumentException {
 
         handlerBuilder.clear();
-        handlerBuilder.withName(c.getName()).withSubjectClass(c).withClass(c);
+        buildClassTableAccess(c);
+        //Get parent DBAccess and TableAccess
+        TableAccess parentDBTableAccess=parent.getTableAccess();
+        TableAccess parentLocalTableAccess=((SingleTableMapper) parent).getLocalTableAccess();
 
-        //Get parent DBAcces and TableAccess
-        TableAccess parentDBTableAcces=((SingleTableMapper)parent).getDBTableAccess();
-        TableAccess parentTableAcces=parent.getTableAccess();
-
-        //Create class own talbeAccess
-        TableAccess classPrivateTableAccess=handlerBuilder.build();
+        //Create class own tableAccess
+        TableAccess thisLocalTableAccess=handlerBuilder.build();
 
 
-        //Update DBTableAcces with current classtable
-        parentDBTableAcces.union(classPrivateTableAccess);
+        //Update DBTableAccess with current castable
+        parentDBTableAccess.union(thisLocalTableAccess);
 
         //Create concrete class table access
-        TableAccess readyTableAcces=parentTableAcces.getIndependentCopy();
-        readyTableAcces.union(classPrivateTableAccess);
-        return new SingleTableMapper(c,readyTableAcces,parentDBTableAcces);
+        TableAccess thisReadyLocalTableAccess=parentLocalTableAccess.getIndependentCopy();
+        thisReadyLocalTableAccess.union(thisLocalTableAccess);
+        return new SingleTableMapper(c,parentDBTableAccess,thisReadyLocalTableAccess);
     }
 
     @Override
     public BaseInheritanceMapper createMapping(Class c) {
-        String tableName=c.getName();
         handlerBuilder.clear();
-        handlerBuilder.withColumn("ClassName","String",false);
-        handlerBuilder.withClass(c).withName(tableName).withClass(c);
+        //handlerBuilder.withColumn("ClassName","Varchar(30)",false); //TODO you might want to add if making key mapping
+        buildClassTableAccess(c);
 
         return new SingleTableMapper(c,handlerBuilder.build());
     }

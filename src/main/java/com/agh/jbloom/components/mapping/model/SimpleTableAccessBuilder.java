@@ -23,6 +23,7 @@ public class SimpleTableAccessBuilder implements TableAccessBuilder {
     private Map<String, String> relatedClasses;
     private String mapingName="Auto";
 
+
     public SimpleTableAccessBuilder(SqlTypeConverter typeConverter) {
         this.typeConverter = typeConverter;
         clear();
