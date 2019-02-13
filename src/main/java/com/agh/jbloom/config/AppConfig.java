@@ -54,7 +54,7 @@ public class AppConfig {
 
     @Bean
     public CohesionAnalyzer cohesionAnalyzer(){
-        return new CohesionAnalyzer(connectionPool(), databaseScheme());
+        return new CohesionAnalyzer(connectionPool());
     }
 
     @Bean

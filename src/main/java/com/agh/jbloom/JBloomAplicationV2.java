@@ -22,7 +22,7 @@ public class JBloomAplicationV2 {
         ApplicationContext ctx = new AnnotationConfigApplicationContext(AppConfig.class);
 
 
-        CohesionAnalyzer cohesionAnalyzer = new CohesionAnalyzer(ctx.getBean(ConnectionPool.class), new DatabaseScheme());
+        CohesionAnalyzer cohesionAnalyzer = new CohesionAnalyzer(ctx.getBean(ConnectionPool.class));
 
         MapperFactory mapperFactory = new ConcreteTableMapperFactory(new SimpleTableAccessBuilder(new BaseSqlTypeConverter()));
 
