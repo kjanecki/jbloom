@@ -10,23 +10,28 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class SingleTableMapper extends BaseInheritanceMapper {
-    private TableAccess DBTableAccess;
+    private TableAccess localTableAccess;
 
 
     public SingleTableMapper(Class subject, TableAccess tableAccess)
     {
         super(subject, tableAccess);
-        DBTableAccess =tableAccess.getIndependentCopy();
+        localTableAccess =tableAccess.getIndependentCopy();
     }
 
-    public SingleTableMapper(Class subject, TableAccess tableAccess, TableAccess dbAccesTable)
+    public SingleTableMapper(Class subject, TableAccess dbAccessTable, TableAccess localAccessTable)
     {
-        super(subject, tableAccess);
-        DBTableAccess =dbAccesTable;
+        super(subject, dbAccessTable);
+        localTableAccess =localAccessTable;
     }
 
-    public TableAccess getDBTableAccess() {
-        return DBTableAccess;
+    public TableAccess getLocalTableAccess() {
+        return localTableAccess;
+    }
+
+    @Override
+    public TableAccess getTableAccess() {
+        return super.getTableAccess();
     }
 
     @Override
