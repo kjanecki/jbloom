@@ -9,25 +9,32 @@ import com.agh.jbloom.components.query.concretequeryfactory.DeleteQueryFactory;
 import com.agh.jbloom.components.query.concretequeryfactory.InsertQueryFactory;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public abstract class BaseInheritanceMapper implements Mapper {
 
     protected Class subject;
     protected TableAccess tableAccess;
+    protected List<Mapper> relatedMappers;
 
     public BaseInheritanceMapper(Class subject, TableAccess tableAccess) {
         this.subject = subject;
         this.tableAccess = tableAccess;
+        relatedMappers = new ArrayList<>();
     }
 
     public TableAccess getTableAccess() {
         return tableAccess;
     }
-
     public Class getSubject() {
         return subject;
+    }
+
+    public void addMapper(Mapper mapper){
+        relatedMappers.add(mapper);
     }
 
     @Override
@@ -49,7 +56,16 @@ public abstract class BaseInheritanceMapper implements Mapper {
         return "BaseInheritanceMapper{" +
                 "subject=" + subject +
                 ", tableAccess=" + tableAccess +
+                ", relatedMappers=" + relatedMappers +
                 '}';
+    }
+
+    public List<Mapper> getRelatedMappers(){
+        return relatedMappers;
+    }
+
+    public Map<String, String> getRelatedClasses(){
+        return this.tableAccess.getRelatedClasses();
     }
 
     public abstract List<TableScheme> getRelatedTables();

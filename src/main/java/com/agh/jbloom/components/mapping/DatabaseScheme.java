@@ -1,10 +1,13 @@
 package com.agh.jbloom.components.mapping;
 
+import com.agh.jbloom.components.mapping.mappers.BaseInheritanceMapper;
 import com.agh.jbloom.components.mapping.mappers.Mapper;
+import org.springframework.stereotype.Component;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Component
 public class DatabaseScheme {
 
     private Map<Class, Mapper> classHandlers;
@@ -23,5 +26,18 @@ public class DatabaseScheme {
 
     public Mapper findHandler(Class c){
         return classHandlers.get(c);
+    }
+
+    public void addTable(BaseInheritanceMapper mapper){
+
+    }
+
+    public void deleteTable(BaseInheritanceMapper mapper){
+
+    }
+
+    public boolean checkIfExist(BaseInheritanceMapper mapper){
+
+        return false;
     }
 }

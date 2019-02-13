@@ -5,18 +5,29 @@ import com.agh.jbloom.components.dataaccess.ObjectFieldAccess;
 import com.agh.jbloom.components.mapping.model.Key;
 import com.agh.jbloom.components.mapping.model.TableScheme;
 
+import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
-public class TableAccess{
+public class TableAccess {
 
     private String mappingType;
     private TableScheme tableScheme;
     private ObjectFieldAccess objectFieldAccess;
     private Key primaryKey;
     private List<Key> foreignKeys;
+    private Map<String, String> relatedClasses;
 
+    public TableAccess(String mappingType, TableScheme tableScheme, ObjectFieldAccess objectFieldAccess, Key primaryKey, List<Key> foreignKeys, Map<String, String> relatedClasses) {
+        this.mappingType = mappingType;
+        this.tableScheme = tableScheme;
+        this.objectFieldAccess = objectFieldAccess;
+        this.primaryKey = primaryKey;
+        this.foreignKeys = foreignKeys;
+        this.relatedClasses = relatedClasses;
+    }
 
     public TableAccess(String mappingType, TableScheme tableScheme, ObjectFieldAccess objectFieldAccess, Key primaryKey, List<Key> foreignKeys) {
         this.mappingType = mappingType;
@@ -24,6 +35,7 @@ public class TableAccess{
         this.objectFieldAccess = objectFieldAccess;
         this.primaryKey = primaryKey;
         this.foreignKeys = foreignKeys;
+        relatedClasses = new HashMap<>();
     }
 
     public void union(TableAccess m2){
@@ -45,12 +57,20 @@ public class TableAccess{
         return objectFieldAccess;
     }
 
+    public Map<String, String> getRelatedClasses() {
+        return relatedClasses;
+    }
+
     public Key getPrimaryKey() {
         return primaryKey;
     }
 
     public List<Key> getForeignKeys() {
         return foreignKeys;
+    }
+
+    public void addForeignKey(Key key){
+        foreignKeys.add(key);
     }
 
     @Override
@@ -69,8 +89,6 @@ public class TableAccess{
     public int hashCode() {
         return Objects.hash(mappingType, getTableScheme(), objectFieldAccess, primaryKey, foreignKeys);
     }
-
-
 
     @Override
     public String toString() {

@@ -41,7 +41,7 @@ public class ConcreteTableMappingTest {
     @Test
     public void canCreateMappingForDerivedClasses() throws IllegalAccessException {
         Map<String, ColumnScheme> columnMap = new HashMap<>();
-        columnMap.put("param", new ColumnScheme("param", "numeric(10,5)", false));
+        columnMap.put("param", new ColumnScheme("param", "double", false));
         columnMap.putAll(base);
         TableScheme table1 = new TableScheme(columnMap, "simple_entity_impl");
         BaseInheritanceMapper m = mapperFactory.createMapping(SimpleEntity.class);

@@ -5,13 +5,15 @@ import com.agh.jbloom.annotations.Id;
 import com.agh.jbloom.annotations.Table;
 
 @Entity
-@Table(name = "simple_entity")
+@Table(name = "my_simple_entity")
 public class SimpleEntity{
 
     @Id
     protected int id;
     protected String name;
     protected String description;
+
+    protected String dupa;
 
     public SimpleEntity() {
     }
@@ -44,6 +46,14 @@ public class SimpleEntity{
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getDupa() {
+        return dupa;
+    }
+
+    public void setDupa(String dupa) {
+        this.dupa = dupa;
     }
 }
 
