@@ -55,6 +55,14 @@ public class PersistanceApi {
 
             System.out.println("it is in db so we just insert");
 
+            queryFactory = new InsertQueryFactory();
+
+            SqlQuery insertQuery = queryFactory.createQuery(databaseScheme.getTableMap().get(o.getClass().getName()), o);
+
+            Statement statement = connection.createStatement();
+
+            statement.executeUpdate(insertQuery.toString());
+
         }else {
 
             // it is not mapped, so we are mapping and then we add it
@@ -63,13 +71,7 @@ public class PersistanceApi {
 
         }
 
-        queryFactory = new InsertQueryFactory();
 
-        SqlQuery insertQuery = queryFactory.createQuery(databaseScheme.getTableMap().get(o.getClass().getName()), o);
-
-        Statement statement = connection.createStatement();
-
-        statement.executeUpdate(insertQuery.toString());
 
         connectionPool.releaseConnection(connection);
 
