@@ -10,10 +10,13 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class SingleTableMapper extends BaseInheritanceMapper {
+    private TableAccess tableAccessToDB;
 
 
-    public SingleTableMapper(Class subject, TableAccess tableAccess) {
+    public SingleTableMapper(Class subject, TableAccess tableAccess)
+    {
         super(subject, tableAccess);
+        tableAccessToDB=tableAccess.getIndependentCopy();
     }
 
     @Override
