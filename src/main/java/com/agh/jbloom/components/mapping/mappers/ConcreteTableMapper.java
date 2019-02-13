@@ -69,16 +69,8 @@ public class ConcreteTableMapper extends BaseInheritanceMapper {
         return o;
     }
 
-    public <T> Collection findRelatedObjects(){
-
-        return null;
-    }
-
-    public <T, E> void get(Class<T> c, Class<E> e) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-        Object l =  c.cast(c.getConstructor().newInstance());
-        Collection col = (Collection)l;
-        System.out.println(col);
-        col.add("Str");
-        System.out.println(col);
+    @Override
+    public TableAccess getRelatedTableAccess() {
+        return tableAccess;
     }
 }

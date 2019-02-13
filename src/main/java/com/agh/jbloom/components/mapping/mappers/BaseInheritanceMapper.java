@@ -1,5 +1,6 @@
 package com.agh.jbloom.components.mapping.mappers;
 
+import com.agh.jbloom.annotations.Table;
 import com.agh.jbloom.components.dataaccess.ConnectionPool;
 import com.agh.jbloom.components.dataaccess.IdentityField;
 import com.agh.jbloom.components.mapping.model.TableScheme;
@@ -69,4 +70,6 @@ public abstract class BaseInheritanceMapper implements Mapper {
     }
 
     public abstract List<TableScheme> getRelatedTables();
+
+    public abstract TableAccess getRelatedTableAccess();
 }

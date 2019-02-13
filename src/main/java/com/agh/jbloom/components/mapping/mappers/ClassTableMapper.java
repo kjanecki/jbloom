@@ -92,4 +92,11 @@ public class ClassTableMapper extends BaseInheritanceMapper{
     public List<TableScheme> getRelatedTables() {
         return null;
     }
+
+
+    @Override
+    public TableAccess getRelatedTableAccess() {
+        return tableAccess;
+    }
 }
+

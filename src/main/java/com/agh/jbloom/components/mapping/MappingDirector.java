@@ -1,23 +1,85 @@
 package com.agh.jbloom.components.mapping;
 
 import com.agh.jbloom.annotations.Id;
-import com.agh.jbloom.components.dataaccess.ObjectFieldAccess;
 import com.agh.jbloom.components.mapping.factories.*;
 import com.agh.jbloom.components.mapping.mappers.BaseInheritanceMapper;
 import com.agh.jbloom.components.mapping.model.SimpleTableAccessBuilder;
 import com.agh.jbloom.components.query.BaseSqlTypeConverter;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class MappingDirector {
 
     private CohesionAnalyzer cohesionAnalyzer;
+    private Map<String, MapperFactory> mapperFactories;
+    private DatabaseScheme databaseScheme;
 
-    public MappingDirector(CohesionAnalyzer cohesionAnalyzer) {
+    public MappingDirector(CohesionAnalyzer cohesionAnalyzer, DatabaseScheme databaseScheme) {
         this.cohesionAnalyzer = cohesionAnalyzer;
+        this.databaseScheme = databaseScheme;
+        this.mapperFactories = new HashMap<>();
+    }
+
+    public void createMapping2(Class c, String mappingType){
+        MapperFactory factory = getMapperFactory(mappingType);
+        Stack<Class> classes = this.createClassesStack(c, databaseScheme);
+        try {
+            createInheritanceMappers(classes, factory);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void createInheritanceMappers(Stack<Class> classes, MapperFactory factory) throws SQLException {
+
+        BaseInheritanceMapper mapper;
+        if(classes.peek().getSuperclass().equals(Object.class)){
+            mapper = factory.createMapping(classes.pop());
+        }else{
+            Class c = classes.pop();
+            mapper = factory.createMapping(c, (BaseInheritanceMapper)databaseScheme.findHandler(c.getSuperclass()));
+            cohesionAnalyzer.checkCohesion(mapper.getTableAccess());
+            databaseScheme.addHandler(c, mapper);
+        }
+
+        while (!classes.empty()){
+            Class c = classes.pop();
+            mapper = factory.createMapping(c, mapper);
+            cohesionAnalyzer.checkCohesion(mapper.getTableAccess());
+            databaseScheme.addHandler(c, mapper);
+
+        }
+    }
+
+    private Stack<Class> createClassesStack(Class c, DatabaseScheme scheme) {
+        Class current = c;
+        Stack<Class> classes = new Stack<>();
+        while (scheme.findHandler(current) == null && !current.equals(Object.class)) {
+            classes.push(current);
+            current = current.getSuperclass();
+        }
+        return classes;
+    }
+
+    public MapperFactory getMapperFactory(String mappingType){
+        if(mapperFactories.containsKey(mappingType)){
+            return mapperFactories.get(mappingType);
+        }else {
+            MapperFactory factory = null;
+            switch (mappingType){
+                case "SINGLE_TABLE":
+                    factory = new SingleTableMapperFactory(new SimpleTableAccessBuilder(new BaseSqlTypeConverter()));
+                case "CONCRETE_TABLE":
+                    factory = new ConcreteTableMapperFactory(new SimpleTableAccessBuilder(new BaseSqlTypeConverter()));
+                case "CLASS_TABLE":
+                    factory = new ClassTableMapperFactory(new SimpleTableAccessBuilder(new BaseSqlTypeConverter()));
+            }
+            mapperFactories.put(mappingType, factory);
+            return factory;
+        }
+
     }
 
     public void createMapping(Class clas, String mappingType) throws IllegalAccessException, SQLException {
