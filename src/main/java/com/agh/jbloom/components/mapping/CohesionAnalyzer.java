@@ -67,7 +67,7 @@ public class CohesionAnalyzer {
     }
 
 
-    public void chechCohesion(TableAccess mapper) throws SQLException {
+    public void checkCohesion(TableAccess mapper) throws SQLException {
 
         Connection connection = connectionPool.acquireConnection();
 
@@ -127,8 +127,8 @@ public class CohesionAnalyzer {
                             //need to add it to DB
                             System.out.println("we need to add: " + mapperColumn);
 
-                            //TODO need to add alter query
-                            st.executeQuery("alter table " + table_name + " add " + mapperColumn + " varchar(255)");
+                            //TODO need to add alter query, cant use executeQuery
+                            //st.executeQuery("alter table " + table_name + " add " + mapperColumn + " varchar(255)");
                         }
                     }
 

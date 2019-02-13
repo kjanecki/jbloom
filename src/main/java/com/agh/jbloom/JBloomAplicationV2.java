@@ -29,7 +29,7 @@ public class JBloomAplicationV2 {
         var handler1 = mapperFactory.createMapping(SimpleEntity.class);
 
 
-        cohesionAnalyzer.chechCohesion(handler1.getTableAccess());
+        cohesionAnalyzer.checkCohesion(handler1.getTableAccess());
 
     }
 }
