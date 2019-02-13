@@ -49,6 +49,8 @@ public class SingleTableMapper extends BaseInheritanceMapper {
 
     @Override
     public void buildTransaction(Transaction transaction, Object o, QueryFactory factory) throws SQLException {
+        transaction.addQuery(factory.createQuery(super.tableAccess,o).toString());
+
 
     }
 

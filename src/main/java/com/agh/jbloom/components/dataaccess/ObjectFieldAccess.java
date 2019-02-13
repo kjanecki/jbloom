@@ -32,8 +32,15 @@ public class ObjectFieldAccess {
 
     public Object getField(String fieldName, Object subject) throws InvocationTargetException, IllegalAccessException {
         Method getter;
+
         if ((getter = getters.get(fieldName)) != null){
-            return getter.invoke(subject);
+            try {
+                Object q=getter.invoke(subject);
+                return q;
+            }catch (IllegalArgumentException e){
+                return "Null";
+            }
+
         }else{
             return null;
         }
