@@ -119,6 +119,8 @@ public class MappingDirector {
                 //TODO rethink it (A,B,C) -> what if we add D (A,B,C,D) we have to create new table (A,B,C,D) ??
                 concreteMapper = mappers.get(mappers.size() - 1);
 
+                databaseScheme.addTable(concreteMapper);
+
                 cohesionAnalyzer.checkCohesion(concreteMapper.getTableAccess());
 
                 break;
@@ -131,10 +133,13 @@ public class MappingDirector {
                 mappers.add(mapperFactory.createMapping(allClasses.get(allClasses.size() - 1)));
 
                 for (int i = allClasses.size() - 2; i >= 0; --i) {
-                    mappers.add(mapperFactory.createMapping(allClasses.get(i), mappers.get(mappers.size() - 1)));
+                    BaseInheritanceMapper mapper = mapperFactory.createMapping(allClasses.get(i), mappers.get(mappers.size() - 1));
+                    mappers.add(mapper);
+                    databaseScheme.addTable(mapper);
+
                 }
 
-                for (var mapper: mappers){
+                for (var mapper : mappers) {
                     cohesionAnalyzer.checkCohesion(mapper.getTableAccess());
                 }
 
@@ -148,10 +153,12 @@ public class MappingDirector {
                 mappers.add(mapperFactory.createMapping(allClasses.get(allClasses.size() - 1)));
 
                 for (int i = allClasses.size() - 2; i >= 0; --i) {
-                    mappers.add(mapperFactory.createMapping(allClasses.get(i), mappers.get(mappers.size() - 1)));
+                    BaseInheritanceMapper mapper = mapperFactory.createMapping(allClasses.get(i), mappers.get(mappers.size() - 1));
+                    mappers.add(mapper);
+                    databaseScheme.addTable(mapper);
                 }
 
-                for (var mapper: mappers){
+                for (var mapper : mappers) {
                     cohesionAnalyzer.checkCohesion(mapper.getTableAccess());
                 }
 
@@ -159,70 +166,80 @@ public class MappingDirector {
         }
 
 
+
+
     }
 
-
-
-    public static void main(String[] args) throws IllegalAccessException, SQLException {
-//        MappingDirector d = new MappingDirector();
-//
-//        d.createMapping(Dupa.class, "CLASS_TABLE");
+    public DatabaseScheme getDatabaseScheme() {
+        return databaseScheme;
     }
 
-
-
-
-    static public class Dupa extends a {
-        private String name;
-
-        @Id
-        private int id;
-
-        public Dupa(String name, int id) {
-            this.name = name;
-            this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public void setId(int id) {
-            this.id = id;
-        }
-    }
-
-    static public class a extends b{
-        @Id
-        private String aa="AA";
-
-        public String getAa() {
-            return aa;
-        }
-
-        public void setAa(String aa) {
-            this.aa = aa;
-        }
-    }
-
-    static public class b{
-
-        private String bb="BB";
-
-        public String getBb() {
-            return bb;
-        }
-
-        public void setBb(String bb) {
-            this.bb = bb;
-        }
+    public void setDatabaseScheme(DatabaseScheme databaseScheme) {
+        this.databaseScheme = databaseScheme;
     }
 }
+
+
+//    public static void main(String[] args) throws IllegalAccessException, SQLException {
+////        MappingDirector d = new MappingDirector();
+////
+////        d.createMapping(Dupa.class, "CLASS_TABLE");
+//    }
+//
+//
+//
+//
+//    static public class Dupa extends a {
+//        private String name;
+//
+//        @Id
+//        private int id;
+//
+//        public Dupa(String name, int id) {
+//            this.name = name;
+//            this.id = id;
+//        }
+//
+//        public String getName() {
+//            return name;
+//        }
+//
+//        public int getId() {
+//            return id;
+//        }
+//
+//        public void setName(String name) {
+//            this.name = name;
+//        }
+//
+//        public void setId(int id) {
+//            this.id = id;
+//        }
+//    }
+//
+//    static public class a extends b{
+//        @Id
+//        private String aa="AA";
+//
+//        public String getAa() {
+//            return aa;
+//        }
+//
+//        public void setAa(String aa) {
+//            this.aa = aa;
+//        }
+//    }
+//
+//    static public class b{
+//
+//        private String bb="BB";
+//
+//        public String getBb() {
+//            return bb;
+//        }
+//
+//        public void setBb(String bb) {
+//            this.bb = bb;
+//        }
+//    }
+//}
