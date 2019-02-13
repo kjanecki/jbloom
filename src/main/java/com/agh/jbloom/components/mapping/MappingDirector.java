@@ -5,10 +5,12 @@ import com.agh.jbloom.components.mapping.factories.*;
 import com.agh.jbloom.components.mapping.mappers.BaseInheritanceMapper;
 import com.agh.jbloom.components.mapping.model.SimpleTableAccessBuilder;
 import com.agh.jbloom.components.query.BaseSqlTypeConverter;
+import org.springframework.stereotype.Component;
 
 import java.sql.SQLException;
 import java.util.*;
 
+@Component
 public class MappingDirector {
 
     private CohesionAnalyzer cohesionAnalyzer;
@@ -35,21 +37,20 @@ public class MappingDirector {
     private void createInheritanceMappers(Stack<Class> classes, MapperFactory factory) throws SQLException {
 
         BaseInheritanceMapper mapper;
-        if(classes.peek().getSuperclass().equals(Object.class)){
-            mapper = factory.createMapping(classes.pop());
+        Class root = classes.pop();
+        if(root.getSuperclass().equals(Object.class)){
+            mapper = factory.createMapping(root);
         }else{
-            Class c = classes.pop();
-            mapper = factory.createMapping(c, (BaseInheritanceMapper)databaseScheme.findHandler(c.getSuperclass()));
-            cohesionAnalyzer.checkCohesion(mapper.getTableAccess());
-            databaseScheme.addHandler(c, mapper);
+            mapper = factory.createMapping(root, (BaseInheritanceMapper)databaseScheme.findHandler(root.getSuperclass()));
         }
+        cohesionAnalyzer.checkCohesion(mapper.getTableAccess());
+        databaseScheme.addHandler(root, mapper);
 
         while (!classes.empty()){
             Class c = classes.pop();
             mapper = factory.createMapping(c, mapper);
             cohesionAnalyzer.checkCohesion(mapper.getTableAccess());
             databaseScheme.addHandler(c, mapper);
-
         }
     }
 
