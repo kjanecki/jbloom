@@ -125,7 +125,7 @@ public class CohesionAnalyzer {
                             System.out.println("we need to add column: " + mapperColumn);
 
                             //TODO need to add alter query, cant use executeQuery
-                            //st.executeQuery("alter table " + table_name + " add " + mapperColumn + " varchar(255)");
+                            st.executeUpdate("alter table " + table_name + " add " + mapperColumn + " varchar(255)");
                         }
                     }
 

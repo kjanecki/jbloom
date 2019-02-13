@@ -1,5 +1,6 @@
 package com.agh.jbloom.components;
 
+import com.agh.jbloom.annotations.MappingType;
 import com.agh.jbloom.components.dataaccess.ConnectionObserver;
 import com.agh.jbloom.components.dataaccess.ConnectionPool;
 import com.agh.jbloom.components.dataaccess.IdentityField;
@@ -36,43 +37,36 @@ public class PersistanceApi {
 
         databaseScheme = new DatabaseScheme();
         mappingDirector = new MappingDirector(new CohesionAnalyzer(connectionPool, databaseScheme));
+        mappingDirector.setDatabaseScheme(databaseScheme);
     }
 
     public void insert(Object o) throws SQLException {
 
         Connection connection = connectionPool.acquireConnection();
 
-        //TODO how to check if object class is already mapped
-        boolean isInTabele = databaseScheme.checkIfExist(o);
+        boolean isInTable = databaseScheme.checkIfExist(o);
 
-        if (isInTabele){
+        if (isInTable){
 
-            queryFactory = new InsertQueryFactory();
-
-            //TODO need to get table access
-            SqlQuery insertQuery = queryFactory.createQuery(null, o);
-
-            Statement statement = connection.createStatement();
-
-            statement.executeUpdate(insertQuery.toString());
+            System.out.println("it is in db so we just insert");
 
         }else {
 
             // it is not mapped, so we are mapping and then we add it
-            mapClassIntoDB(o.getClass());
-
+            //mappingDirector.createMapping(o.getClass(), o.getClass().getAnnotationsByType());
 
         }
 
+        queryFactory = new InsertQueryFactory();
 
+        SqlQuery insertQuery = queryFactory.createQuery(databaseScheme.getTableMap().get(o.getClass().getName()), o);
+
+        Statement statement = connection.createStatement();
+
+        statement.executeUpdate(insertQuery.toString());
 
         connectionPool.releaseConnection(connection);
 
-    }
-
-    private void mapClassIntoDB(Class clas){
-
-        //TODO
     }
 
     public void update(Object o) throws SQLException, NoMappedClassOfObjectExcepction {
@@ -83,8 +77,7 @@ public class PersistanceApi {
 
             queryFactory = new UpdateQueryFactory();
 
-            //TODO have to know how to get tableAccess base on class of an object
-            SqlQuery query = queryFactory.createQuery(null, o);
+            SqlQuery query = queryFactory.createQuery(databaseScheme.getTableMap().get(o.getClass().getName()), o);
 
         } else throw new NoMappedClassOfObjectExcepction("Class: " + o.getClass().getName() + " is not mapped into DataBase.");
 
@@ -100,8 +93,7 @@ public class PersistanceApi {
 
             queryFactory = new DeleteQueryFactory();
 
-            //TODO have to know how to get tableAccess base on class of an object
-            SqlQuery query = queryFactory.createQuery(null, o);
+            SqlQuery query = queryFactory.createQuery(databaseScheme.getTableMap().get(o.getClass().getName()), o);
 
         } else throw new NoMappedClassOfObjectExcepction("Class: " + o.getClass().getName() + " is not mapped into DataBase.");
 

@@ -15,6 +15,7 @@ import java.util.List;
 public class MappingDirector {
 
     private CohesionAnalyzer cohesionAnalyzer;
+    private DatabaseScheme databaseScheme;
 
     public MappingDirector(CohesionAnalyzer cohesionAnalyzer) {
         this.cohesionAnalyzer = cohesionAnalyzer;
@@ -57,6 +58,8 @@ public class MappingDirector {
                 //TODO rethink it (A,B,C) -> what if we add D (A,B,C,D) we have to create new table (A,B,C,D) ??
                 concreteMapper = mappers.get(mappers.size() - 1);
 
+                databaseScheme.addTable(concreteMapper);
+
                 cohesionAnalyzer.checkCohesion(concreteMapper.getTableAccess());
 
                 break;
@@ -69,7 +72,10 @@ public class MappingDirector {
                 mappers.add(mapperFactory.createMapping(allClasses.get(allClasses.size() - 1)));
 
                 for (int i = allClasses.size() - 2; i >= 0; --i) {
-                    mappers.add(mapperFactory.createMapping(allClasses.get(i), mappers.get(mappers.size() - 1)));
+                    BaseInheritanceMapper mapper = mapperFactory.createMapping(allClasses.get(i), mappers.get(mappers.size() - 1));
+                    mappers.add(mapper);
+                    databaseScheme.addTable(mapper);
+
                 }
 
                 for (var mapper : mappers) {
@@ -86,7 +92,9 @@ public class MappingDirector {
                 mappers.add(mapperFactory.createMapping(allClasses.get(allClasses.size() - 1)));
 
                 for (int i = allClasses.size() - 2; i >= 0; --i) {
-                    mappers.add(mapperFactory.createMapping(allClasses.get(i), mappers.get(mappers.size() - 1)));
+                    BaseInheritanceMapper mapper = mapperFactory.createMapping(allClasses.get(i), mappers.get(mappers.size() - 1));
+                    mappers.add(mapper);
+                    databaseScheme.addTable(mapper);
                 }
 
                 for (var mapper : mappers) {
@@ -97,8 +105,17 @@ public class MappingDirector {
         }
 
 
+
+
     }
 
+    public DatabaseScheme getDatabaseScheme() {
+        return databaseScheme;
+    }
+
+    public void setDatabaseScheme(DatabaseScheme databaseScheme) {
+        this.databaseScheme = databaseScheme;
+    }
 }
 
 
