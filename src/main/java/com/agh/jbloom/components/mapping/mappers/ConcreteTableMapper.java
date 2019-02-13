@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class ConcreteTableMapper extends BaseInheritanceMapper {
@@ -65,5 +66,10 @@ public class ConcreteTableMapper extends BaseInheritanceMapper {
         }
 
         return o;
+    }
+
+    public <T> Collection findRelatedObjects(){
+
+        return null;
     }
 }
