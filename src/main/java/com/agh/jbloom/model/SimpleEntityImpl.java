@@ -4,7 +4,7 @@ import com.agh.jbloom.annotations.Entity;
 import com.agh.jbloom.annotations.Table;
 
 @Entity
-@Table(name = "simple_entity_impl")
+@Table(name = "bob2")
 public class SimpleEntityImpl extends  SimpleEntity {
 
     protected Double param;
