@@ -35,7 +35,7 @@ public class SingleTableMapperFactory extends BaseInheritanceMapperFactory {
     @Override
     public BaseInheritanceMapper createMapping(Class c) {
         handlerBuilder.clear();
-        handlerBuilder.withColumn("ClassName","Varchar(30)",false);
+        //handlerBuilder.withColumn("ClassName","Varchar(30)",false); //TODO you might want to add if making key mapping
         buildClassTableAccess(c);
 
         return new SingleTableMapper(c,handlerBuilder.build());
