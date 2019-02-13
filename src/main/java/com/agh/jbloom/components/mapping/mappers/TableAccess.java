@@ -67,6 +67,10 @@ public class TableAccess {
         return foreignKeys;
     }
 
+    public void addForeignKey(Key key){
+        foreignKeys.add(key);
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;

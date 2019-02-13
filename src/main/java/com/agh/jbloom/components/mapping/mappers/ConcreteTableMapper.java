@@ -28,6 +28,7 @@ public class ConcreteTableMapper extends BaseInheritanceMapper {
 
     @Override
     public void buildTransaction(Transaction transaction, Object o, QueryFactory factory) throws SQLException {
+
         transaction.addQuery(factory.createQuery(tableAccess, o).toString());
     }
 
@@ -71,5 +72,13 @@ public class ConcreteTableMapper extends BaseInheritanceMapper {
     public <T> Collection findRelatedObjects(){
 
         return null;
+    }
+
+    public <T, E> void get(Class<T> c, Class<E> e) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        Object l =  c.cast(c.getConstructor().newInstance());
+        Collection col = (Collection)l;
+        System.out.println(col);
+        col.add("Str");
+        System.out.println(col);
     }
 }
