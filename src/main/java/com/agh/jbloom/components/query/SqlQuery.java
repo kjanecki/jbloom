@@ -12,6 +12,9 @@ public abstract class SqlQuery {
         this.object = object;
     }
 
+    public SqlQuery() {
+    }
+
     public TableAccess getTableAccess() {
         return tableAccess;
     }

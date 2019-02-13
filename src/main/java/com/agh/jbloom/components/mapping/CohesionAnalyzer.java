@@ -1,6 +1,7 @@
 package com.agh.jbloom.components.mapping;
 
 import com.agh.jbloom.components.dataaccess.ConnectionPool;
+import com.agh.jbloom.components.dataaccess.DataSource;
 import com.agh.jbloom.components.mapping.mappers.BaseInheritanceMapper;
 import com.agh.jbloom.components.mapping.mappers.ConcreteTableMapper;
 import com.agh.jbloom.components.mapping.mappers.TableAccess;
@@ -70,9 +71,18 @@ public class CohesionAnalyzer {
     }
 
 
-    public boolean chechCohesion(DatabaseMetaData databaseMetaData, DatabaseScheme databaseScheme, BaseInheritanceMapper mapper) throws SQLException {
+    public boolean chechCohesion(DatabaseScheme databaseScheme, BaseInheritanceMapper mapper) throws SQLException {
 
-        //ResultSet tables = databaseMetaData.getTables(null, null, null, null);
+        Connection connection = connectionPool.acquireConnection();
+
+        DatabaseMetaData metaData = connection.getMetaData();
+
+        ResultSet tables = metaData.getTables(null, null, null, null);
+
+
+        while (tables.next()){
+            System.out.println(tables.getString(3)); // 3 stands for table name
+        }
 
         // 1. nowy obiekt -> dodajemy go
 
@@ -90,4 +100,8 @@ public class CohesionAnalyzer {
 
         return true;
     }
+
+    public static void main(String[] args) {
+    }
+
 }

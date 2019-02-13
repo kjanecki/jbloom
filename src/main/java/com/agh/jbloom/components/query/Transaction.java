@@ -5,6 +5,7 @@ import com.agh.jbloom.components.dataaccess.ConnectionPool;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Transaction{
@@ -23,9 +24,12 @@ public class Transaction{
 
     public void commit() throws SQLException {
         Connection conn = connectionPool.acquireConnection();
+        System.out.println(queries);
         conn.setAutoCommit(false);
-        for(var query : queries){
-            conn.createStatement().executeUpdate(query);
+        var reverseIt = queries.listIterator(queries.size());
+        while (reverseIt.hasPrevious()){
+            conn.createStatement().executeUpdate(reverseIt.previous());
+            System.out.println(reverseIt);
         }
         conn.commit();
     }
