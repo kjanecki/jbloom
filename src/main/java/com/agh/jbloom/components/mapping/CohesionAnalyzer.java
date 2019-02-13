@@ -6,9 +6,11 @@ import com.agh.jbloom.components.mapping.mappers.BaseInheritanceMapper;
 import com.agh.jbloom.components.mapping.mappers.ConcreteTableMapper;
 import com.agh.jbloom.components.mapping.mappers.TableAccess;
 import com.agh.jbloom.components.mapping.model.TableScheme;
+import org.springframework.stereotype.Component;
 
 import java.sql.*;
 
+@Component
 public class CohesionAnalyzer {
 
     private ConnectionPool connectionPool;

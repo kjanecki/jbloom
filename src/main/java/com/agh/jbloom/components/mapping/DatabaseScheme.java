@@ -54,4 +54,8 @@ public class DatabaseScheme {
     public boolean checkIfExist(Object o){
         return classHandlers.keySet().contains(o.getClass());
     }
+
+    public boolean checkIfExist(Class c){
+        return classHandlers.keySet().contains(c);
+    }
 }

@@ -1,10 +1,12 @@
 package com.agh.jbloom.model;
 
 import com.agh.jbloom.annotations.Entity;
+import com.agh.jbloom.annotations.MappingType;
 import com.agh.jbloom.annotations.Table;
 
 @Entity
-@Table(name = "my_simple_entity_impl2")
+@Table(name = "my_new_simple_entity_impl2")
+@MappingType(name="CONCRETE_TABLE")
 public class SimpleEntityImpl2 extends SimpleEntityImpl{
 
     private String local_param;

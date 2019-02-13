@@ -24,12 +24,10 @@ public class Transaction{
 
     public void commit() throws SQLException {
         Connection conn = connectionPool.acquireConnection();
-        System.out.println(queries);
         conn.setAutoCommit(false);
         var reverseIt = queries.listIterator(queries.size());
         while (reverseIt.hasPrevious()){
             conn.createStatement().executeUpdate(reverseIt.previous());
-            System.out.println(reverseIt);
         }
         conn.commit();
     }
