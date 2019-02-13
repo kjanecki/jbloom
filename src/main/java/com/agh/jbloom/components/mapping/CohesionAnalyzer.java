@@ -96,10 +96,7 @@ public class CohesionAnalyzer {
 
                 System.out.println(table_name + "=" + mapper.getTableScheme().getName());
 
-
                 if ( table_name.equals(mapper.getTableScheme().getName())){
-
-                    System.out.println("It is in DB");
 
                     // Its in DB so now we check if it is in cohesion of columns with DB table
                     Statement st = connection.createStatement();

@@ -72,7 +72,7 @@ public class MappingDirector {
                     mappers.add(mapperFactory.createMapping(allClasses.get(i), mappers.get(mappers.size() - 1)));
                 }
 
-                for (var mapper: mappers){
+                for (var mapper : mappers) {
                     cohesionAnalyzer.checkCohesion(mapper.getTableAccess());
                 }
 
@@ -89,7 +89,7 @@ public class MappingDirector {
                     mappers.add(mapperFactory.createMapping(allClasses.get(i), mappers.get(mappers.size() - 1)));
                 }
 
-                for (var mapper: mappers){
+                for (var mapper : mappers) {
                     cohesionAnalyzer.checkCohesion(mapper.getTableAccess());
                 }
 
@@ -99,68 +99,69 @@ public class MappingDirector {
 
     }
 
-
-
-    public static void main(String[] args) throws IllegalAccessException, SQLException {
-//        MappingDirector d = new MappingDirector();
-//
-//        d.createMapping(Dupa.class, "CLASS_TABLE");
-    }
-
-
-
-
-    static public class Dupa extends a {
-        private String name;
-
-        @Id
-        private int id;
-
-        public Dupa(String name, int id) {
-            this.name = name;
-            this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public void setId(int id) {
-            this.id = id;
-        }
-    }
-
-    static public class a extends b{
-        @Id
-        private String aa="AA";
-
-        public String getAa() {
-            return aa;
-        }
-
-        public void setAa(String aa) {
-            this.aa = aa;
-        }
-    }
-
-    static public class b{
-
-        private String bb="BB";
-
-        public String getBb() {
-            return bb;
-        }
-
-        public void setBb(String bb) {
-            this.bb = bb;
-        }
-    }
 }
+
+
+//    public static void main(String[] args) throws IllegalAccessException, SQLException {
+////        MappingDirector d = new MappingDirector();
+////
+////        d.createMapping(Dupa.class, "CLASS_TABLE");
+//    }
+//
+//
+//
+//
+//    static public class Dupa extends a {
+//        private String name;
+//
+//        @Id
+//        private int id;
+//
+//        public Dupa(String name, int id) {
+//            this.name = name;
+//            this.id = id;
+//        }
+//
+//        public String getName() {
+//            return name;
+//        }
+//
+//        public int getId() {
+//            return id;
+//        }
+//
+//        public void setName(String name) {
+//            this.name = name;
+//        }
+//
+//        public void setId(int id) {
+//            this.id = id;
+//        }
+//    }
+//
+//    static public class a extends b{
+//        @Id
+//        private String aa="AA";
+//
+//        public String getAa() {
+//            return aa;
+//        }
+//
+//        public void setAa(String aa) {
+//            this.aa = aa;
+//        }
+//    }
+//
+//    static public class b{
+//
+//        private String bb="BB";
+//
+//        public String getBb() {
+//            return bb;
+//        }
+//
+//        public void setBb(String bb) {
+//            this.bb = bb;
+//        }
+//    }
+//}

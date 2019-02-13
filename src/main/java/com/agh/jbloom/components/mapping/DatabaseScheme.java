@@ -36,8 +36,7 @@ public class DatabaseScheme {
 
     }
 
-    public boolean checkIfExist(BaseInheritanceMapper mapper){
-
-        return false;
+    public boolean checkIfExist(Object o){
+        return classHandlers.keySet().contains(o.getClass());
     }
 }
