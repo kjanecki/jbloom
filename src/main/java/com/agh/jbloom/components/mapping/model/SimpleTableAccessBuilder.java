@@ -21,6 +21,8 @@ public class SimpleTableAccessBuilder implements TableAccessBuilder {
     private SqlTypeConverter typeConverter;
     private Class subject;
     private Map<String, String> relatedClasses;
+    private String mapingName="Auto";
+
 
     public SimpleTableAccessBuilder(SqlTypeConverter typeConverter) {
         this.typeConverter = typeConverter;
@@ -116,10 +118,22 @@ public class SimpleTableAccessBuilder implements TableAccessBuilder {
     public TableAccess build(){
         TableAccess mapper;
         TableScheme tableScheme = new TableScheme(columnSchemeMap, tableName);
-        mapper = new TableAccess("ConcreteTable", tableScheme, objectFieldAccess, primaryKey, foreignKeys,relatedClasses);
+        mapper = new TableAccess(mapingName, tableScheme, objectFieldAccess, primaryKey, foreignKeys, relatedClasses);
         clear();
         return mapper;
     }
 
+    @Override
+    public TableAccessBuilder withColumn(String columnName,String tye,boolean isNullable) {
+        ColumnScheme columnScheme=new ColumnScheme(columnName,tye,isNullable);
+        columnSchemeMap.put(columnName,columnScheme);
+        return this;
+    }
 
+
+    @Override
+    public TableAccessBuilder withMapingName(String name) {
+         this.mapingName=name;
+         return this;
+    }
 }
