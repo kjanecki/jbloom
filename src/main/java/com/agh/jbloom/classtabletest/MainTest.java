@@ -17,8 +17,8 @@ public class MainTest {
 
         ApplicationContext ctx = new AnnotationConfigApplicationContext(AppConfig.class);
         PersistenceApi api = ctx.getBean(PersistenceApi.class);
-
-        SimpleEntityImpl2 obj = new SimpleEntityImpl2(8, "Dziewiec", "Dwa", 2.0, "cztery");
+        IdentityField id = api.getKey(SimpleEntityImpl2.class);
+        SimpleEntityImpl2 obj = new SimpleEntityImpl2((int)id.getId(), "Dziewiec", "Dwa", 2.0, "cztery");
         api.insert(obj);
 
 

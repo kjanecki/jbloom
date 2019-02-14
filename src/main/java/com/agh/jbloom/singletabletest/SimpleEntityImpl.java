@@ -5,9 +5,9 @@ import com.agh.jbloom.annotations.MappingType;
 import com.agh.jbloom.annotations.Table;
 
 @Entity
-@Table(name = "single_table_simple_entity_impl")
+@Table(name = "single_table_simple_entity")
 @MappingType(name="SINGLE_TABLE")
-public class SimpleEntityImpl extends SimpleEntity {
+public class SimpleEntityImpl extends  SimpleEntity {
 
     protected Double param;
 

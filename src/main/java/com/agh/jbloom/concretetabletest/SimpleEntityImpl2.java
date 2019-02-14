@@ -7,7 +7,7 @@ import com.agh.jbloom.annotations.Table;
 @Entity
 @Table(name = "concrete_table_simple_entity_impl2")
 @MappingType(name="CONCRETE_TABLE")
-public class SimpleEntityImpl2 extends SimpleEntityImpl {
+public class SimpleEntityImpl2 extends SimpleEntityImpl{
 
     private String local_param;
 

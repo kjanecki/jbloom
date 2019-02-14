@@ -4,11 +4,13 @@ import com.agh.jbloom.annotations.MappingType;
 import com.agh.jbloom.components.dataaccess.ConnectionObserver;
 import com.agh.jbloom.components.dataaccess.ConnectionPool;
 import com.agh.jbloom.components.dataaccess.IdentityField;
+import com.agh.jbloom.components.dataaccess.KeyGenerator;
 import com.agh.jbloom.components.exceptions.NoMappedClassOfObjectExcepction;
 import com.agh.jbloom.components.mapping.CohesionAnalyzer;
 import com.agh.jbloom.components.mapping.DatabaseScheme;
 import com.agh.jbloom.components.mapping.MappingDirector;
 import com.agh.jbloom.components.mapping.factories.MapperFactory;
+import com.agh.jbloom.components.mapping.mappers.BaseInheritanceMapper;
 import com.agh.jbloom.components.mapping.mappers.Mapper;
 import com.agh.jbloom.components.query.QueryFactory;
 import com.agh.jbloom.components.query.SqlQuery;
@@ -32,7 +34,7 @@ public class PersistenceApi {
     private ConnectionPool connectionPool;
     private MappingDirector mappingDirector;
     private Map<String, QueryFactory> queryFactories;
-
+    private KeyGenerator keyGenerator;
     private DatabaseScheme databaseScheme;
 
     public PersistenceApi(ConnectionObserver connectionObserver, ConnectionPool connectionPool, MappingDirector mappingDirector, DatabaseScheme databaseScheme) {
@@ -45,6 +47,20 @@ public class PersistenceApi {
         queryFactories.put("insert", new InsertQueryFactory());
         queryFactories.put("delete", new DeleteQueryFactory());
         queryFactories.put("update", new UpdateQueryFactory());
+
+        keyGenerator = new KeyGenerator(connectionPool);
+    }
+
+    public <T> IdentityField getKey(Class<T> c) throws SQLException {
+        if (!databaseScheme.checkIfExist(c)){
+            mappingDirector.createMapping2(c, c.getAnnotation(MappingType.class).name());
+        }
+
+        Class current = c;
+        while (!current.getSuperclass().equals(Object.class))
+            current = current.getSuperclass();
+
+        return keyGenerator.getKey((BaseInheritanceMapper) databaseScheme.findHandler(current));
     }
 
     public void insert(Object o) throws SQLException{

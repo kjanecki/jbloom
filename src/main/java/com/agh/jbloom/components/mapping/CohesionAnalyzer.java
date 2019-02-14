@@ -8,6 +8,7 @@ import com.agh.jbloom.components.mapping.mappers.BaseInheritanceMapper;
 import com.agh.jbloom.components.mapping.mappers.ConcreteTableMapper;
 import com.agh.jbloom.components.mapping.mappers.TableAccess;
 import com.agh.jbloom.components.mapping.model.TableScheme;
+import com.agh.jbloom.components.query.BaseSqlTypeConverter;
 import org.springframework.stereotype.Component;
 
 import java.sql.*;
@@ -113,7 +114,7 @@ public class CohesionAnalyzer {
                     if (columnsCount > schemeColumnCount){
                         // It means that user deleted som field in class
                         // So we make old column null by default
-                        String deletedFiled = makeOldColumnNull(mapper.getTableScheme().getColumnMap().keySet(), columnsMetaData, table_name);
+                        String deletedFiled = makeOldColumnNull(mapper.getTableScheme().getColumnMap().keySet(), columnsMetaData, table_name, mapper);
                         throw new DeletedFieldOfClassException("You have deleted field: " + deletedFiled);
                     }
 
@@ -176,7 +177,7 @@ public class CohesionAnalyzer {
 
     }
 
-    private String makeOldColumnNull(Set<String> schemeColumns, ResultSetMetaData columnsMetaData, String table_name) throws SQLException {
+    private String makeOldColumnNull(Set<String> schemeColumns, ResultSetMetaData columnsMetaData, String table_name, TableAccess mapper) throws SQLException {
 
         String oldColumn = "";
         for (int i=1; i < columnsMetaData.getColumnCount() + 1; ++i){
@@ -189,8 +190,9 @@ public class CohesionAnalyzer {
 
         Connection conn = connectionPool.acquireConnection();
         Statement stm = conn.createStatement();
-        stm.executeUpdate( "alter table "  + table_name + " add " +  oldColumn + " varchar(255) default null;");
-
+        System.out.println(oldColumn);
+        System.out.println(mapper.getTableScheme().getColumnMap().get(oldColumn).getType());
+        stm.executeUpdate( "alter table"  + table_name + " modify " +  oldColumn + " " + mapper.getTableScheme().getColumnMap().get(oldColumn).getType() +" default null");
 
         return oldColumn;
     }
