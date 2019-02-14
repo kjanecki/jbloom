@@ -57,8 +57,11 @@ public class PersistenceApi {
         }
 
         Class current = c;
-        while (!current.getSuperclass().equals(Object.class))
-            current = current.getSuperclass();
+
+        var name = c.getAnnotation(MappingType.class).name();
+        if(!name.equals("CONCRETE_TABLE"))
+            while (!current.getSuperclass().equals(Object.class))
+                current = current.getSuperclass();
 
         return keyGenerator.getKey((BaseInheritanceMapper) databaseScheme.findHandler(current));
     }

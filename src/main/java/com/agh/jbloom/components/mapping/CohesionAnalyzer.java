@@ -115,14 +115,15 @@ public class CohesionAnalyzer {
                         // It means that user deleted som field in class
                         // So we make old column null by default
                         String deletedFiled = makeOldColumnNull(mapper.getTableScheme().getColumnMap().keySet(), columnsMetaData, table_name, mapper);
-                        throw new DeletedFieldOfClassException("You have deleted field: " + deletedFiled);
+//                        throw new DeletedFieldOfClassException("You have deleted field: " + deletedFiled);
+                        return;
                     }
 
 
                     if (columnsCount == schemeColumnCount){
 
                         if(!checkIfSameTypes(mapper.getTableScheme().getColumnMap().keySet(), columnsMetaData)){
-                            throw new ChangedTypeOfAnMappedFieldException();
+                            return;
                         }
                     }
 
@@ -180,19 +181,21 @@ public class CohesionAnalyzer {
     private String makeOldColumnNull(Set<String> schemeColumns, ResultSetMetaData columnsMetaData, String table_name, TableAccess mapper) throws SQLException {
 
         String oldColumn = "";
+        String type ="";
         for (int i=1; i < columnsMetaData.getColumnCount() + 1; ++i){
 
             if (!schemeColumns.contains(columnsMetaData.getColumnName(i))){
                 oldColumn = columnsMetaData.getColumnName(i);
+                type = columnsMetaData.getColumnTypeName(i);
                 break;
             }
         }
 
         Connection conn = connectionPool.acquireConnection();
         Statement stm = conn.createStatement();
-        System.out.println(oldColumn);
-        System.out.println(mapper.getTableScheme().getColumnMap().get(oldColumn).getType());
-        stm.executeUpdate( "alter table"  + table_name + " modify " +  oldColumn + " " + mapper.getTableScheme().getColumnMap().get(oldColumn).getType() +" default null");
+        if(type.equals("VARCHAR"))
+            type="VARCHAR(100)";
+        stm.executeUpdate( "alter table "  + table_name + " modify " +  oldColumn + " " + type +" default null;");
 
         return oldColumn;
     }

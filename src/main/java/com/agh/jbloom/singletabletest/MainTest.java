@@ -17,9 +17,13 @@ public class MainTest {
 
         ApplicationContext ctx = new AnnotationConfigApplicationContext(AppConfig.class);
         PersistenceApi api = ctx.getBean(PersistenceApi.class);
-        IdentityField id = api.getKey(SimpleEntityImpl2.class);
-        SimpleEntityImpl2 obj = new SimpleEntityImpl2((int)id.getId(), "Dziewiec", "Dwa", 2.0, "cztery");
+        IdentityField id = api.getKey(SimpleEntityImpl.class);
+        SimpleEntityImpl obj = new SimpleEntityImpl((int)id.getId(), "Dziewiec", "Dwa", 2.0);
         api.insert(obj);
+
+        SimpleEntityImpl obj2 = new SimpleEntityImpl(8, "Dziewiec", "Dwa", 2.0);
+
+        api.delete(obj2);
 
 
 //        IdentityField id = new IdentityField(SimpleEntityImpl2.class,5);
