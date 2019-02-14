@@ -51,7 +51,7 @@ public class MappingDirector {
         while (!classes.empty()){
             Class c = classes.pop();
             mapper = factory.createMapping(c, mapper);
-            cohesionAnalyzer.checkCohesion(mapper.getTableAccess());
+            cohesionAnalyzer.checkCohesion(mapper.getRelatedTableAccess());
             databaseScheme.addHandler(c, mapper);
         }
     }

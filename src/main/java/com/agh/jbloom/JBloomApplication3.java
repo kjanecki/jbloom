@@ -1,30 +1,25 @@
 package com.agh.jbloom;
 
+import com.agh.jbloom.classtabletest.SimpleEntity;
+import com.agh.jbloom.classtabletest.SimpleEntityImpl;
+import com.agh.jbloom.classtabletest.SimpleEntityImpl2;
 import com.agh.jbloom.components.dataaccess.ConnectionPool;
 import com.agh.jbloom.components.dataaccess.IdentityField;
 import com.agh.jbloom.components.mapping.*;
 import com.agh.jbloom.components.mapping.factories.ClassTableMapperFactory;
-import com.agh.jbloom.components.mapping.factories.ConcreteTableMapperFactory;
 import com.agh.jbloom.components.mapping.factories.MapperFactory;
-import com.agh.jbloom.components.mapping.factories.SingleTableMapperFactory;
 import com.agh.jbloom.components.mapping.mappers.BaseInheritanceMapper;
 import com.agh.jbloom.components.mapping.model.SimpleTableAccessBuilder;
 import com.agh.jbloom.components.query.BaseSqlTypeConverter;
 import com.agh.jbloom.components.query.Transaction;
 import com.agh.jbloom.components.query.concretequeryfactory.DeleteQueryFactory;
-import com.agh.jbloom.components.query.concretequeryfactory.InsertQueryFactory;
 import com.agh.jbloom.components.query.concretequeryfactory.UpdateQueryFactory;
 import com.agh.jbloom.config.AppConfig;
-import com.agh.jbloom.model.*;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 @SpringBootApplication
 public class JBloomApplication3 {
