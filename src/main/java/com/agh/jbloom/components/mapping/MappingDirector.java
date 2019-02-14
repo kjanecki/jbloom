@@ -73,10 +73,13 @@ public class MappingDirector {
             switch (mappingType){
                 case "SINGLE_TABLE":
                     factory = new SingleTableMapperFactory(new SimpleTableAccessBuilder(new BaseSqlTypeConverter()));
+                    break;
                 case "CONCRETE_TABLE":
                     factory = new ConcreteTableMapperFactory(new SimpleTableAccessBuilder(new BaseSqlTypeConverter()));
+                    break;
                 case "CLASS_TABLE":
                     factory = new ClassTableMapperFactory(new SimpleTableAccessBuilder(new BaseSqlTypeConverter()));
+                    break;
             }
             mapperFactories.put(mappingType, factory);
             return factory;
