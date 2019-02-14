@@ -1,11 +1,10 @@
-package com.agh.jbloom.classtabletest;
+package com.agh.jbloom.singletabletest;
 
 import com.agh.jbloom.components.PersistenceApi;
 import com.agh.jbloom.config.AppConfig;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-
 
 import java.sql.SQLException;
 
@@ -17,7 +16,7 @@ public class MainTest {
         ApplicationContext ctx = new AnnotationConfigApplicationContext(AppConfig.class);
         PersistenceApi api = ctx.getBean(PersistenceApi.class);
 
-        SimpleEntityImpl2 obj = new SimpleEntityImpl2(8, "Dziewiec", "Dwa", 2.0, "cztery");
+        SimpleEntityImpl obj = new SimpleEntityImpl(10, "Dziewiec", "Dwa", 2.0);
         api.insert(obj);
 
 

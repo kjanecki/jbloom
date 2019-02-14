@@ -189,7 +189,8 @@ public class CohesionAnalyzer {
 
         Connection conn = connectionPool.acquireConnection();
         Statement stm = conn.createStatement();
-        stm.executeUpdate( "alter table"  + table_name + " add " +  oldColumn + " varchar(255) default null");
+        stm.executeUpdate( "alter table "  + table_name + " add " +  oldColumn + " varchar(255) default null;");
+
 
         return oldColumn;
     }

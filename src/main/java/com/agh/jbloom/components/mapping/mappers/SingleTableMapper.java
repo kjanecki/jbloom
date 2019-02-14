@@ -92,6 +92,6 @@ public class SingleTableMapper extends BaseInheritanceMapper {
 
     @Override
     public TableAccess getRelatedTableAccess() {
-        return tableAccess;
+        return super.getTableAccess();
     }
 }

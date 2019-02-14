@@ -1,9 +1,8 @@
-package com.agh.jbloom;
+package com.agh.jbloom.classtabletest;
 
 import com.agh.jbloom.components.PersistenceApi;
-import com.agh.jbloom.components.dataaccess.IdentityField;
+import com.agh.jbloom.components.dataaccess.KeyGenerator;
 import com.agh.jbloom.config.AppConfig;
-import com.agh.jbloom.model.SimpleEntityImpl2;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
