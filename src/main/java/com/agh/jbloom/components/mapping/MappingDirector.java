@@ -1,6 +1,7 @@
 package com.agh.jbloom.components.mapping;
 
 import com.agh.jbloom.annotations.Id;
+import com.agh.jbloom.components.exceptions.DeletedFieldOfClassException;
 import com.agh.jbloom.components.mapping.factories.*;
 import com.agh.jbloom.components.mapping.mappers.BaseInheritanceMapper;
 import com.agh.jbloom.components.mapping.model.SimpleTableAccessBuilder;
@@ -28,13 +29,13 @@ public class MappingDirector {
         Stack<Class> classes = this.createClassesStack(c, databaseScheme);
         try {
             createInheritanceMappers(classes, factory);
-        } catch (SQLException e) {
+        } catch (SQLException | DeletedFieldOfClassException e) {
             e.printStackTrace();
         }
 
     }
 
-    private void createInheritanceMappers(Stack<Class> classes, MapperFactory factory) throws SQLException {
+    private void createInheritanceMappers(Stack<Class> classes, MapperFactory factory) throws SQLException, DeletedFieldOfClassException {
 
         BaseInheritanceMapper mapper;
         Class root = classes.pop();
@@ -83,7 +84,7 @@ public class MappingDirector {
 
     }
 
-    public void createMapping(Class clas, String mappingType) throws IllegalAccessException, SQLException {
+    public void createMapping(Class clas, String mappingType) throws IllegalAccessException, SQLException, DeletedFieldOfClassException {
 
         // Get all superclasses and class
         List<Class> allClasses = new ArrayList<>();

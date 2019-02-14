@@ -4,6 +4,7 @@ import com.agh.jbloom.annotations.MappingType;
 import com.agh.jbloom.components.dataaccess.ConnectionObserver;
 import com.agh.jbloom.components.dataaccess.ConnectionPool;
 import com.agh.jbloom.components.dataaccess.IdentityField;
+import com.agh.jbloom.components.exceptions.DeletedFieldOfClassException;
 import com.agh.jbloom.components.exceptions.NoMappedClassOfObjectExcepction;
 import com.agh.jbloom.components.mapping.CohesionAnalyzer;
 import com.agh.jbloom.components.mapping.DatabaseScheme;
@@ -41,7 +42,7 @@ public class PersistanceApi {
         mappingDirector.setDatabaseScheme(databaseScheme);
     }
 
-    public void insert(Object o) throws SQLException, IllegalAccessException {
+    public void insert(Object o) throws SQLException, IllegalAccessException, DeletedFieldOfClassException {
 
         Connection connection = connectionPool.acquireConnection();
 
@@ -112,9 +113,14 @@ public class PersistanceApi {
         return null;
     }
 
+    //TODO change geting annotitoin
     private String getMappingType(Class c){
         Annotation a = c.getAnnotation(MappingType.class);
-        return ((MappingType) a).name();
+
+        if (a != null){
+            return ((MappingType) a).name();
+        }
+        return "CLASS_TABLE";
     }
 
 
