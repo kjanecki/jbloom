@@ -2,6 +2,7 @@ package com.agh.jbloom.components.mapping;
 
 import com.agh.jbloom.components.dataaccess.ConnectionPool;
 import com.agh.jbloom.components.dataaccess.DataSource;
+import com.agh.jbloom.components.exceptions.ChangedTypeOfAnMappedFieldException;
 import com.agh.jbloom.components.exceptions.DeletedFieldOfClassException;
 import com.agh.jbloom.components.mapping.mappers.BaseInheritanceMapper;
 import com.agh.jbloom.components.mapping.mappers.ConcreteTableMapper;
@@ -69,7 +70,7 @@ public class CohesionAnalyzer {
     }
 
 
-    public void checkCohesion(TableAccess mapper) throws SQLException, DeletedFieldOfClassException {
+    public void checkCohesion(TableAccess mapper) throws SQLException, DeletedFieldOfClassException, ChangedTypeOfAnMappedFieldException {
 
         Connection connection = connectionPool.acquireConnection();
 
@@ -114,6 +115,14 @@ public class CohesionAnalyzer {
                         // So we make old column null by default
                         String deletedFiled = makeOldColumnNull(mapper.getTableScheme().getColumnMap().keySet(), columnsMetaData, table_name);
                         throw new DeletedFieldOfClassException("You have deleted field: " + deletedFiled);
+                    }
+
+
+                    if (columnsCount == schemeColumnCount){
+
+                        if(!checkIfSameTypes(mapper.getTableScheme().getColumnMap().keySet(), columnsMetaData)){
+                            throw new ChangedTypeOfAnMappedFieldException();
+                        }
                     }
 
                     // ELSE
@@ -172,7 +181,7 @@ public class CohesionAnalyzer {
         String oldColumn = "";
         for (int i=1; i < columnsMetaData.getColumnCount() + 1; ++i){
 
-            if (schemeColumns.contains(columnsMetaData.getColumnName(i))){
+            if (!schemeColumns.contains(columnsMetaData.getColumnName(i))){
                 oldColumn = columnsMetaData.getColumnName(i);
                 break;
             }
@@ -183,6 +192,20 @@ public class CohesionAnalyzer {
         stm.executeUpdate( "alter table"  + table_name + " add " +  oldColumn + " varchar(255) default null");
 
         return oldColumn;
+    }
+
+
+    private boolean checkIfSameTypes(Set<String> schemeColumns, ResultSetMetaData columnsMetaData) throws SQLException {
+
+
+        for (int i=1; i < columnsMetaData.getColumnCount() + 1; ++i){
+
+            int typeNumber = columnsMetaData.getColumnType(i);
+
+
+        }
+
+        return true;
     }
 
 }

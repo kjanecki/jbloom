@@ -2,6 +2,7 @@ package com.agh.jbloom;
 
 
 import com.agh.jbloom.components.dataaccess.ConnectionPool;
+import com.agh.jbloom.components.exceptions.ChangedTypeOfAnMappedFieldException;
 import com.agh.jbloom.components.exceptions.DeletedFieldOfClassException;
 import com.agh.jbloom.components.mapping.CohesionAnalyzer;
 import com.agh.jbloom.components.mapping.DatabaseScheme;
@@ -19,7 +20,7 @@ import java.sql.SQLException;
 
 @SpringBootApplication
 public class JBloomAplicationV2 {
-    public static void main(String[] args) throws SQLException, DeletedFieldOfClassException {
+    public static void main(String[] args) throws SQLException, DeletedFieldOfClassException, ChangedTypeOfAnMappedFieldException {
         ApplicationContext ctx = new AnnotationConfigApplicationContext(AppConfig.class);
 
 
