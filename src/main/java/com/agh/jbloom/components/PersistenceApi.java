@@ -66,10 +66,15 @@ public class PersistenceApi {
     }
 
     private Mapper getMapper(Object o){
-        if (!databaseScheme.checkIfExist(o)){
-            mappingDirector.createMapping2(o.getClass(), o.getClass().getAnnotation(MappingType.class).name());
+        return getMapper(o.getClass());
+    }
+
+
+    private <T> Mapper getMapper(Class<T> c){
+        if (!databaseScheme.checkIfExist(c)){
+            mappingDirector.createMapping2(c, c.getAnnotation(MappingType.class).name());
         }
-        return databaseScheme.findHandler(o.getClass());
+        return databaseScheme.findHandler(c);
     }
 
     private void executeTransaction(Mapper mapper, QueryFactory factory, Object o) throws SQLException {
