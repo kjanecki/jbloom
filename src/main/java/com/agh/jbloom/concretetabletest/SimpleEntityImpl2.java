@@ -1,12 +1,12 @@
-package com.agh.jbloom.classtabletest;
+package com.agh.jbloom.concretetabletest;
 
 import com.agh.jbloom.annotations.Entity;
 import com.agh.jbloom.annotations.MappingType;
 import com.agh.jbloom.annotations.Table;
 
 @Entity
-@Table(name = "class_table_simple_entity_impl2")
-@MappingType(name="CLASS_TABLE")
+@Table(name = "concrete_table_simple_entity_impl2")
+@MappingType(name="CONCRETE_TABLE")
 public class SimpleEntityImpl2 extends SimpleEntityImpl{
 
     private String local_param;

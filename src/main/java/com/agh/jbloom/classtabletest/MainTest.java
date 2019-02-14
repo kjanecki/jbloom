@@ -1,9 +1,8 @@
-package com.agh.jbloom;
+package com.agh.jbloom.classtabletest;
 
 import com.agh.jbloom.components.PersistenceApi;
 import com.agh.jbloom.components.dataaccess.IdentityField;
 import com.agh.jbloom.config.AppConfig;
-import com.agh.jbloom.model.SimpleEntityImpl2;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -18,8 +17,8 @@ public class MainTest {
 
         ApplicationContext ctx = new AnnotationConfigApplicationContext(AppConfig.class);
         PersistenceApi api = ctx.getBean(PersistenceApi.class);
-
-        SimpleEntityImpl2 obj = new SimpleEntityImpl2(8, "Dziewiec", "Dwa", 2.0, "cztery");
+        IdentityField id = api.getKey(SimpleEntityImpl2.class);
+        SimpleEntityImpl2 obj = new SimpleEntityImpl2((int)id.getId(), "Dziewiec", "Dwa", 2.0, "cztery");
         api.insert(obj);
 
 

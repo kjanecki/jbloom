@@ -1,4 +1,4 @@
-package com.agh.jbloom.model;
+package com.agh.jbloom.classtabletest;
 
 import com.agh.jbloom.annotations.Entity;
 import com.agh.jbloom.annotations.Id;
@@ -6,7 +6,7 @@ import com.agh.jbloom.annotations.MappingType;
 import com.agh.jbloom.annotations.Table;
 
 @Entity
-@Table(name = "my_new_simple_entity")
+@Table(name = "class_table_simple_entity")
 @MappingType(name="CLASS_TABLE")
 public class SimpleEntity{
 

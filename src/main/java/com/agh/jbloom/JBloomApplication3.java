@@ -30,45 +30,45 @@ import java.util.List;
 public class JBloomApplication3 {
 
     public static void main(String[] args) throws SQLException{
-
-        try {
-            System.out.println(Class.forName("components.mapping.mappers.ClassTableMapper"));
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-
-        ApplicationContext ctx = new AnnotationConfigApplicationContext(AppConfig.class);
-
-        CohesionAnalyzer analyzer = ctx.getBean(CohesionAnalyzer.class);
-
-        MapperFactory mapperFactory = new ClassTableMapperFactory(new SimpleTableAccessBuilder(new BaseSqlTypeConverter()));
-
-        var handler1 = mapperFactory.createMapping(SimpleEntity.class);
-        var handler2 = mapperFactory.createMapping(SimpleEntityImpl.class,handler1);
-        BaseInheritanceMapper handler = mapperFactory.createMapping(SimpleEntityImpl2.class, handler2);
-
-        SimpleEntityImpl2 obj = new SimpleEntityImpl2(5, "Osiem", "Dwa", 2.0, "Trzy");
-        SimpleEntityImpl obj2 = new SimpleEntityImpl(23,"Bobos","Janecki To Cebulka",2.0);
-        IdentityField id = new IdentityField(SimpleEntityImpl2.class, 5);
-
-        System.out.println();
-        System.out.println("-------------------");
-        System.out.println("Creating tables");
-        System.out.println("-------------------");
-
-//        analyzer.createTable(handler1.getTableAccess());
-//        analyzer.createTable(handler2.getTableAccess());
-//        analyzer.createTable(handler.getTableAccess());
-
-        Transaction transaction = new Transaction(ctx.getBean(ConnectionPool.class));
-        handler.buildTransaction(transaction, obj, new UpdateQueryFactory());
-        handler1.buildTransaction(transaction,obj2,new DeleteQueryFactory());
-        transaction.commit();
-        System.out.println();
-        System.out.println("-------------------");
-        System.out.println("INSERTED IN TO DB");
-        System.out.println("-------------------");
+//
+//        try {
+//            System.out.println(Class.forName("components.mapping.mappers.ClassTableMapper"));
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//
+//
+//        ApplicationContext ctx = new AnnotationConfigApplicationContext(AppConfig.class);
+//
+//        CohesionAnalyzer analyzer = ctx.getBean(CohesionAnalyzer.class);
+//
+//        MapperFactory mapperFactory = new ClassTableMapperFactory(new SimpleTableAccessBuilder(new BaseSqlTypeConverter()));
+//
+//        var handler1 = mapperFactory.createMapping(SimpleEntity.class);
+//        var handler2 = mapperFactory.createMapping(SimpleEntityImpl.class,handler1);
+//        BaseInheritanceMapper handler = mapperFactory.createMapping(SimpleEntityImpl2.class, handler2);
+//
+//        SimpleEntityImpl2 obj = new SimpleEntityImpl2(5, "Osiem", "Dwa", 2.0, "Trzy");
+//        SimpleEntityImpl obj2 = new SimpleEntityImpl(23,"Bobos","Janecki To Cebulka",2.0);
+//        IdentityField id = new IdentityField(SimpleEntityImpl2.class, 5);
+//
+//        System.out.println();
+//        System.out.println("-------------------");
+//        System.out.println("Creating tables");
+//        System.out.println("-------------------");
+//
+////        analyzer.createTable(handler1.getTableAccess());
+////        analyzer.createTable(handler2.getTableAccess());
+////        analyzer.createTable(handler.getTableAccess());
+//
+//        Transaction transaction = new Transaction(ctx.getBean(ConnectionPool.class));
+//        handler.buildTransaction(transaction, obj, new UpdateQueryFactory());
+//        handler1.buildTransaction(transaction,obj2,new DeleteQueryFactory());
+//        transaction.commit();
+//        System.out.println();
+//        System.out.println("-------------------");
+//        System.out.println("INSERTED IN TO DB");
+//        System.out.println("-------------------");
 
 
 

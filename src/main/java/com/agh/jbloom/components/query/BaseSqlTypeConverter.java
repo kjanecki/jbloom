@@ -6,6 +6,10 @@ public class BaseSqlTypeConverter implements SqlTypeConverter {
     @Override
     public String convert(Field f) {
         var type = f.getType().getSimpleName();
+        return convert(type);
+    }
+
+    public String convert(String type){
         if(type.equals("Integer") || type.equals("int"))
             return "integer";
         else if (type.equals("String"))
@@ -14,5 +18,6 @@ public class BaseSqlTypeConverter implements SqlTypeConverter {
             return "double";
         else
             return "";
+
     }
 }
