@@ -139,6 +139,7 @@ public class CohesionAnalyzer {
 
                             if (mapperColumn.equals(columnsMetaData.getColumnName(i))) {
                                 columnIsInDB = true;
+
                                 break;
                             }
                         }
@@ -147,8 +148,22 @@ public class CohesionAnalyzer {
                             //need to add it to DB
                             System.out.println("we need to add column: " + mapperColumn);
 
+                            String type = "";
+
+
+                            for( var columnScheme: mapper.getTableScheme().getColumnMap().values()){
+
+                                if (columnScheme.getName().equals(mapperColumn)){
+
+                                    type = columnScheme.getType();
+                                }
+                            }
+
+                            if(type.equals("VARCHAR"))
+                                type="VARCHAR(100)";
+
                             //TODO need to add alter query, cant use executeQuery (its null by default)
-                            st.executeUpdate("alter table " + table_name + " add " + mapperColumn + " varchar(255) default NULL" );
+                            st.executeUpdate("alter table " + table_name + " add " + mapperColumn + " " + type + " default NULL" );
                         }
                     }
 
