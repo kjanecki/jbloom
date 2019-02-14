@@ -7,7 +7,7 @@ import com.agh.jbloom.annotations.Table;
 
 @Entity
 @Table(name = "my_new_simple_entity")
-@MappingType(name="CONCRETE_TABLE")
+@MappingType(name="CLASS_TABLE")
 public class SimpleEntity{
 
     @Id

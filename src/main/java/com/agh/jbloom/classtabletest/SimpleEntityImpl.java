@@ -6,7 +6,7 @@ import com.agh.jbloom.annotations.Table;
 
 @Entity
 @Table(name = "my_new_simple_entity_impl")
-@MappingType(name="CONCRETE_TABLE")
+@MappingType(name="CLASS_TABLE")
 public class SimpleEntityImpl extends  SimpleEntity {
 
     protected Double param;
