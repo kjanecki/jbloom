@@ -114,14 +114,17 @@ public class CohesionAnalyzer {
                         // It means that user deleted som field in class
                         // So we make old column null by default
                         String deletedFiled = makeOldColumnNull(mapper.getTableScheme().getColumnMap().keySet(), columnsMetaData, table_name);
-                        throw new DeletedFieldOfClassException("You have deleted field: " + deletedFiled);
+                        //throw new DeletedFieldOfClassException("You have deleted field: " + deletedFiled);
+                        return;
                     }
 
 
                     if (columnsCount == schemeColumnCount){
 
                         if(!checkIfSameTypes(mapper.getTableScheme().getColumnMap().keySet(), columnsMetaData)){
-                            throw new ChangedTypeOfAnMappedFieldException();
+                            //throw new ChangedTypeOfAnMappedFieldException();
+                            System.out.println("Jest okej, albo typ sie nie zgadzaja");
+                            return;
                         }
                     }
 
@@ -181,15 +184,20 @@ public class CohesionAnalyzer {
         String oldColumn = "";
         for (int i=1; i < columnsMetaData.getColumnCount() + 1; ++i){
 
+            System.out.println("kolumna: " + columnsMetaData.getColumnName(i));
             if (!schemeColumns.contains(columnsMetaData.getColumnName(i))){
                 oldColumn = columnsMetaData.getColumnName(i);
                 break;
             }
+
         }
 
         Connection conn = connectionPool.acquireConnection();
         Statement stm = conn.createStatement();
-        stm.executeUpdate( "alter table "  + table_name + " add " +  oldColumn + " varchar(255) default null;");
+
+        System.out.println(oldColumn);
+        System.out.println();
+        stm.executeUpdate( "alter table "  + table_name + " modify " +  oldColumn + " varchar(255) default null;");
 
 
         return oldColumn;
